@@ -1,0 +1,72 @@
+[project]
+name = "hack4krak-toolbox"
+version = "2.0.1"
+description = "CLI for managing tasks for Hack4Krak CTF"
+readme = "README.md"
+requires-python = ">=3.14"
+dependencies = [
+    "cowsay>=6.1",
+    "jsonschema>=4.23.0",
+    "prometheus-client>=0.22.0",
+    "prompt>=0.4.1",
+    "pydantic>=2.11.4",
+    "python-dotenv>=1.2.2",
+    "python-on-whales>=0.81.0",
+    "pyyaml>=6.0.2",
+    "requests>=2.32.0",
+    "typer>=0.15.1",
+    "xxhash>=3.6.0",
+]
+
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+packages = ["toolbox"]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.3.4",
+    "pytest-timeout>=2.3.1",
+    "pre-commit>=4.5.1",
+    "ruff>=0.9.5",
+]
+
+[project.urls]
+Homepage = "https://github.com/Hack4Krak/TasksTemplate"
+
+[project.scripts]
+toolbox = "toolbox.main:app"
+
+[project.optional-dependencies]
+test = ["pytest"]
+
+[tool.pytest.ini_options]
+testpaths = ["toolbox/tests/", "tasks/*/tests/"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+# Default timeout for tests (can be overridden per-test with @pytest.mark.timeout(seconds))
+timeout = 15
+
+[tool.ruff]
+line-length = 120
+preview = true
+
+[tool.ruff.lint]
+select = [
+    "E",  # pycodestyle errors
+    "W",  # pycodestyle warnings
+    "F",  # pyflakes
+    "I",  # isort
+    "B",  # flake8-bugbear
+    "C4", # flake8-comprehensions
+    "N",  # PEP8 naming convetions
+    "UP", # pyupgrade (modern Python syntax)
+    "N",  # PEP8 Naming
+]
+
+ignore = [
+    "C901",  # too complex
+]

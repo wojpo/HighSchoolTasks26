@@ -1,0 +1,73 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string"
+    },
+    "flag_hash": {
+      "type": "string"
+    },
+    "difficulty_estimate": {
+      "type": "string",
+      "enum": ["easy", "medium", "hard"]
+    },
+    "labels": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "assets": {
+      "type": "array",
+      "items": {
+          "type": "object",
+          "properties": {
+            "description": {
+                "type": "string"
+            },
+            "path": {
+                "type": "string"
+            }
+          },
+          "required": ["description", "path"]
+      }
+    },
+    "display": {
+      "type": "object",
+      "properties": {
+        "icon_coordinates": {
+          "type": "object",
+          "properties": {
+            "x": {
+              "type": "number"
+            },
+            "y": {
+              "type": "number"
+            }
+          },
+          "required": ["x", "y"]
+        }
+      },
+      "required": ["icon_coordinates"]
+    },
+    "deployment": {
+      "type": "object",
+      "properties": {
+        "targets": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "description": "Restrict this task to only deploy on these targets. If omitted, task deploys on all targets."
+        }
+      },
+      "required": ["targets"]
+    }
+  },
+  "required": ["id", "name", "flag_hash", "difficulty_estimate", "labels", "display"]
+}

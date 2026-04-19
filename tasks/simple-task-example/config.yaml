@@ -1,0 +1,17 @@
+$schema: "../schema.json"
+
+id: "simple-task-example"
+name: "Simple Task Example"
+flag_hash: "32ecf2b315ca667cf1cfb9fcf9518ebe0eff2c778893f0a1517a3390108c323e"
+difficulty_estimate: "easy"
+labels:
+  - "web"
+
+assets:
+  - description: "Hard html game to find button"
+    path: "task.html"
+
+display:
+  icon_coordinates:
+    x: 24
+    y: 20

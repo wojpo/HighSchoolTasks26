@@ -1,0 +1,728 @@
+import json
+from pathlib import Path
+from unittest.mock import MagicMock, patch
+
+import pytest
+import yaml
+from click.exceptions import Exit
+from rich.console import Console
+
+from toolbox.commands.verify import config, labels, tasks, verify_assets, verify_pictures
+
+
+@pytest.fixture
+def valid_event_config():
+    return """
+    id: tasks
+    name: Hack4Krak Test Edition
+    stages:
+      - name: Event start
+        type: event-start
+        start-date: 2025-02-15T08:30:00+01:00
+      - name: Pizza break
+        type: informative
+        start-date: 2025-02-15T12:30:00+01:00
+        description: Pizza served in the main hall
+      - name: Event end
+        type: event-end
+        start-date: 2025-02-15T15:30:00+01:00
+    """
+
+
+@pytest.fixture
+def valid_labels_config():
+    return {
+        "labels": [
+            {
+                "name": "PWN",
+                "id": "pwn",
+                "description": "PWN",
+            }
+        ]
+    }
+
+
+@pytest.fixture
+def invalid_labels_config():
+    return {
+        "dziengiel": [
+            {
+                "description": "Sell 1000 dziengiels to get flag",
+                "icon": "dziengiel.webp",
+            }
+        ]
+    }
+
+
+PARTIAL_REGISTRATION_CONFIG = """
+    start-date: 2025-01-01T8:30:00+01:00
+    end-date: 2025-02-14T23:59:59+01:00
+    max-teams: 67
+    max-team-size: 5
+    """
+
+
+@pytest.fixture
+def valid_registration_config_internal():
+    return f"""
+    {PARTIAL_REGISTRATION_CONFIG}
+    registration-mode: internal
+    """
+
+
+@pytest.fixture
+def valid_registration_config_external():
+    return f"""
+    {PARTIAL_REGISTRATION_CONFIG}
+    registration-mode: external
+    max-teams-per-organization: 3
+    """
+
+
+@pytest.fixture
+def invalid_registration_config_external():
+    return f"""
+    {PARTIAL_REGISTRATION_CONFIG}
+    registration-mode: external
+    """
+
+
+@pytest.fixture
+def invalid_event_config():
+    return {"event_name": "Test Event"}
+
+
+@pytest.fixture
+def invalid_event_stage_config():
+    return """
+    id: tasks
+    name: Hack4Krak Test Edition
+    stages:
+      - name: Event start
+        type: event-start
+        start-date: 2025-02-15T08:30:00+01:00
+      - name: Event end
+        type: event-end
+        start-date: 2025-02-15T15:30:00+01:00
+      - name: Warm-up
+        type: normal
+        start-date: 2025-02-15T09:00:00+01:00
+    """
+
+
+@pytest.fixture
+def invalid_event_missing_start_stage_config():
+    return """
+    id: tasks
+    name: Hack4Krak Test Edition
+    stages:
+      - name: Lunch
+        type: informative
+        start-date: 2025-02-15T12:30:00+01:00
+      - name: Event end
+        type: event-end
+        start-date: 2025-02-15T15:30:00+01:00
+    """
+
+
+@pytest.fixture
+def invalid_event_missing_end_stage_config():
+    return """
+    id: tasks
+    name: Hack4Krak Test Edition
+    stages:
+      - name: Event start
+        type: event-start
+        start-date: 2025-02-15T08:30:00+01:00
+      - name: Lunch
+        type: informative
+        start-date: 2025-02-15T12:30:00+01:00
+    """
+
+
+@pytest.fixture
+def invalid_event_multiple_start_stages_config():
+    return """
+    id: tasks
+    name: Hack4Krak Test Edition
+    stages:
+      - name: Event start A
+        type: event-start
+        start-date: 2025-02-15T08:30:00+01:00
+      - name: Event start B
+        type: event-start
+        start-date: 2025-02-15T08:45:00+01:00
+      - name: Event end
+        type: event-end
+        start-date: 2025-02-15T15:30:00+01:00
+    """
+
+
+@pytest.fixture
+def invalid_event_multiple_end_stages_config():
+    return """
+    id: tasks
+    name: Hack4Krak Test Edition
+    stages:
+      - name: Event start
+        type: event-start
+        start-date: 2025-02-15T08:30:00+01:00
+      - name: Event end A
+        type: event-end
+        start-date: 2025-02-15T15:30:00+01:00
+      - name: Event end B
+        type: event-end
+        start-date: 2025-02-15T16:30:00+01:00
+    """
+
+
+@pytest.fixture
+def mock_context():
+    context = MagicMock()
+    context.obj = {
+        "tasks_directory": Path("mocked/tasks_directory"),
+        "config_directory": Path("mocked/config_directory"),
+    }
+    return context
+
+
+@pytest.fixture
+def valid_schema():
+    return {
+        "type": "object",
+        "properties": {
+            "id": {"type": "string"},
+            "labels": {"type": "array", "items": {"type": "string"}},
+            "difficulty_estimate": {"type": "string"},
+        },
+        "required": ["id", "enabled"],
+    }
+
+
+@pytest.fixture
+def valid_task_config():
+    return {"id": "valid_task", "enabled": True, "difficulty_estimate": "easy", "labels": ["pwn"]}
+
+
+@pytest.fixture
+def invalid_task_config():
+    return {"id": "invalid_task"}
+
+
+@pytest.fixture
+def valid_assets():
+    return {
+        "assets": [
+            {
+                "description": "dziengiel",
+                "path": "asset1.txt",
+            },
+            {
+                "description": "dziengiel",
+                "path": "asset2.txt",
+            },
+        ]
+    }
+
+
+@pytest.fixture
+def valid_deployments_config():
+    return {
+        "default-target": "dev",
+        "targets": {
+            "dev": {},
+            "prod": {
+                "docker-context": "production",
+            },
+        },
+    }
+
+
+@pytest.fixture
+def valid_participant_tags_config():
+    return """
+    participant-tags:
+      - name: "Present on event"
+        id: "present-on-event"
+        description: "Participant is present on the event."
+        type: "verified"
+    """
+
+
+@pytest.fixture
+def invalid_participant_tags_config_missing_id():
+    return """
+    participant-tags:
+      - name: "Present on event"
+        description: "Participant is present on the event."
+        type: "verified"
+    """
+
+
+@pytest.fixture
+def invalid_participant_tags_config_missing_verified_type():
+    return """
+    participant-tags:
+      - name: "Breakfast day 1"
+        id: "breakfast-day-1"
+        description: "Participant has received breakfast on day 1."
+        type: "meal"
+    """
+
+
+@patch.object(Path, "iterdir")
+@patch.object(Path, "is_dir")
+@patch.object(Path, "is_file")
+@patch.object(Path, "read_text")
+@patch("toolbox.commands.verify.verify_assets")
+@patch("toolbox.commands.verify.verify_pictures")
+def test_verify_valid(
+    mock_verify_pictures,
+    mock_verify_assets,
+    mock_read_text,
+    mock_is_file,
+    mock_is_dir,
+    mock_iterdir,
+    mock_context,
+    valid_schema,
+    valid_task_config,
+    valid_labels_config,
+):
+    mock_verify_pictures.return_value = True
+    mock_verify_assets.return_value = True
+    mock_iterdir.return_value = [Path("valid_task")]
+    mock_is_dir.return_value = True
+    mock_is_file.return_value = True
+    mock_read_text.side_effect = [
+        yaml.dump(valid_labels_config),
+        json.dumps(valid_schema),
+        yaml.dump(valid_task_config),
+    ]
+
+    tasks(mock_context)
+
+    mock_read_text.assert_called()
+
+
+@patch.object(Path, "iterdir")
+@patch.object(Path, "is_dir")
+@patch.object(Path, "is_file")
+@patch.object(Path, "read_text")
+def test_verify_invalid(
+    mock_read_text,
+    mock_is_file,
+    mock_is_dir,
+    mock_iterdir,
+    mock_context,
+    valid_schema,
+    invalid_task_config,
+    valid_labels_config,
+):
+    mock_iterdir.return_value = [Path("invalid_task")]
+    mock_is_dir.return_value = True
+    mock_is_file.return_value = True
+    mock_read_text.side_effect = [
+        yaml.dump(valid_labels_config),
+        json.dumps(valid_schema),
+        yaml.dump(invalid_task_config),
+    ]
+
+    with pytest.raises(Exit):
+        tasks(mock_context)
+
+
+@patch.object(Path, "iterdir")
+@patch.object(Path, "is_dir")
+@patch.object(Path, "is_file")
+@patch.object(Path, "read_text")
+def test_verify_invalid_dir_name(
+    mock_read_text,
+    mock_is_file,
+    mock_is_dir,
+    mock_iterdir,
+    mock_context,
+    valid_schema,
+    invalid_task_config,
+    valid_labels_config,
+):
+    mock_iterdir.return_value = [Path("invalid_task_dir")]
+    mock_is_dir.return_value = True
+    mock_is_file.return_value = True
+    mock_read_text.side_effect = [
+        yaml.dump(valid_labels_config),
+        json.dumps(valid_schema),
+        yaml.dump(invalid_task_config),
+    ]
+
+    with pytest.raises(Exit):
+        tasks(mock_context)
+
+
+@patch.object(Path, "iterdir")
+@patch.object(Path, "is_dir")
+@patch.object(Path, "is_file")
+@patch.object(Path, "read_text")
+def test_verify_invalid_difficulty(
+    mock_read_text,
+    mock_is_file,
+    mock_is_dir,
+    mock_iterdir,
+    mock_context,
+    valid_schema,
+    valid_task_config,
+    valid_labels_config,
+):
+    valid_task_config["difficulty_estimation"] = "Dziengiel"
+    mock_iterdir.return_value = [Path("valid_task")]
+    mock_is_dir.return_value = True
+    mock_is_file.return_value = True
+    mock_read_text.side_effect = [
+        yaml.dump(valid_labels_config),
+        json.dumps(valid_schema),
+        yaml.dump(valid_task_config),
+    ]
+
+    with pytest.raises(Exit):
+        tasks(mock_context)
+
+
+@patch("rich.print")
+@patch("toolbox.commands.verify.hash_file")
+@patch.object(Path, "iterdir")
+@patch.object(Path, "is_dir")
+@patch.object(Path, "is_file")
+@patch.object(Path, "read_text")
+def test_verify_duplicated_pictures(
+    mock_read_text,
+    mock_is_file,
+    mock_is_dir,
+    mock_iterdir,
+    mock_hash_file,
+    mock_rich_print,
+    mock_context,
+    valid_schema,
+    valid_task_config,
+    valid_labels_config,
+):
+    second_task = valid_task_config.copy()
+    second_task["id"] = "second_task"
+    mock_iterdir.side_effect = [[Path("valid_task"), Path("second_task")], [], []]
+    mock_is_dir.return_value = True
+    mock_is_file.return_value = True
+    mock_read_text.side_effect = [
+        yaml.dump(valid_labels_config),
+        json.dumps(valid_schema),
+        yaml.dump(valid_task_config),
+        yaml.dump(second_task),
+    ]
+    mock_hash_file.return_value = "duplicate_hash"
+
+    tasks(mock_context)
+
+    mock_rich_print.assert_any_call("[yellow]Following tasks have the same icons: valid_task, second_task")
+
+
+@patch.object(Path, "iterdir")
+@patch.object(Path, "is_file")
+@patch.object(Path, "is_dir")
+def test_verify_assets_valid(mock_is_dir, mock_is_file, mock_iterdir, valid_assets):
+    mock_iterdir.return_value = [Path("asset1.txt"), Path("asset2.txt")]
+    mock_is_file.return_value = True
+    mock_is_dir.return_value = True
+
+    assert verify_assets(valid_assets, Path("assets"), Path("subdir_path")) is True
+
+
+@patch.object(Path, "iterdir")
+@patch.object(Path, "is_dir")
+def test_verify_assets_missing_asset(mock_isdir, mock_iterdir, valid_assets):
+    mock_iterdir.return_value = [Path("asset1.txt")]
+    mock_isdir.return_value = True
+
+    assert verify_assets(valid_assets, Path("assets"), Path("subdir_path")) is False
+
+
+@patch.object(Path, "iterdir")
+@patch.object(Path, "is_dir")
+@patch.object(Path, "is_file")
+def test_verify_assets_unregistered_asset(mock_is_file, mock_is_dir, mock_iterdir, valid_assets):
+    mock_iterdir.return_value = [Path("asset1.txt"), Path("asset2.txt"), Path("asset3.txt")]
+    mock_is_file.return_value = True
+    mock_is_dir.return_value = True
+
+    assert verify_assets(valid_assets, Path("assets"), Path("subdir_path")) is False
+
+
+@patch.object(Path, "iterdir")
+@patch.object(Path, "is_dir")
+@patch.object(Path, "is_file")
+def test_verify_assets_directory_not_found(mock_is_file, mock_is_dir, mock_iterdir, valid_assets):
+    mock_is_dir.return_value = True
+    mock_is_file.return_value = True
+    mock_iterdir.side_effect = FileNotFoundError
+
+    assert verify_assets(valid_assets, Path("assets"), Path("subdir_path")) is True
+
+
+@patch.object(Path, "read_text")
+def test_config_valid_registration_internal(
+    mock_read_text,
+    mock_context,
+    valid_event_config,
+    valid_registration_config_internal,
+    valid_participant_tags_config,
+):
+    mock_read_text.side_effect = [
+        valid_event_config,
+        valid_registration_config_internal,
+        valid_participant_tags_config,
+    ]
+
+    with patch.object(Console, "print") as mock_print:
+        config(mock_context)
+        mock_print.assert_called_with("[green]All config files are valid!", sep=" ", end="\n")
+
+
+@patch.object(Path, "read_text")
+def test_config_valid_registration_external(
+    mock_read_text,
+    mock_context,
+    valid_event_config,
+    valid_registration_config_external,
+    valid_participant_tags_config,
+):
+    mock_read_text.side_effect = [
+        valid_event_config,
+        valid_registration_config_external,
+        valid_participant_tags_config,
+    ]
+
+    with patch.object(Console, "print") as mock_print:
+        config(mock_context)
+        mock_print.assert_called_with("[green]All config files are valid!", sep=" ", end="\n")
+
+
+@patch.object(Path, "exists")
+@patch.object(Path, "read_text")
+def test_config_registration_external_no_max_team_per_org(
+    mock_read_text, mock_exists, mock_context, valid_event_config, invalid_registration_config_external
+):
+    mock_exists.return_value = True
+    mock_read_text.side_effect = [valid_event_config, invalid_registration_config_external]
+
+    with patch.object(Console, "print") as mock_print:
+        config(mock_context)
+        mock_print.assert_called_with(
+            "[red]One of event configs is invalid: 1 validation error for RegistrationConfig\n  "
+            "'max-teams-per-organization' must be provided if registration-mode is external "
+            "[type=missing_max_teams_per_organization, input_value={'start-date': datetime.d...ation-mode': 'external'}"
+            ", input_type=dict]",
+            sep=" ",
+            end="\n",
+        )
+
+
+@patch.object(Path, "exists")
+@patch.object(Path, "read_text")
+def test_config_invalid_deployments(
+    mock_read_text, mock_exists, mock_context, valid_event_config, valid_registration_config_internal
+):
+    mock_exists.return_value = True
+    mock_read_text.side_effect = [
+        valid_event_config,
+        valid_registration_config_internal,
+        yaml.dump({"default-target": "prod", "targets": {"dev": {}}}),
+    ]
+
+    with patch.object(Console, "print") as mock_print:
+        config(mock_context)
+        mock_print.assert_called_once()
+        assert "[red]" in mock_print.call_args[0][0]
+
+
+@patch.object(Path, "read_text")
+def test_config_invalid_event_stage(
+    mock_read_text, mock_context, invalid_event_stage_config, valid_registration_config_internal
+):
+    mock_read_text.side_effect = [invalid_event_stage_config, valid_registration_config_internal]
+
+    with patch.object(Console, "print") as mock_print:
+        config(mock_context)
+        assert "literal_error" in mock_print.call_args[0][0]
+
+
+@patch.object(Path, "read_text")
+def test_config_missing_event_start_stage(
+    mock_read_text, mock_context, invalid_event_missing_start_stage_config, valid_registration_config_internal
+):
+    mock_read_text.side_effect = [invalid_event_missing_start_stage_config, valid_registration_config_internal]
+
+    with patch.object(Console, "print") as mock_print:
+        config(mock_context)
+        assert "invalid_event_stage_count" in mock_print.call_args[0][0]
+
+
+@patch.object(Path, "read_text")
+def test_config_missing_event_end_stage(
+    mock_read_text, mock_context, invalid_event_missing_end_stage_config, valid_registration_config_internal
+):
+    mock_read_text.side_effect = [invalid_event_missing_end_stage_config, valid_registration_config_internal]
+
+    with patch.object(Console, "print") as mock_print:
+        config(mock_context)
+        assert "invalid_event_stage_count" in mock_print.call_args[0][0]
+
+
+@patch.object(Path, "read_text")
+def test_config_multiple_event_start_stages(
+    mock_read_text,
+    mock_context,
+    invalid_event_multiple_start_stages_config,
+):
+    mock_read_text.side_effect = [
+        invalid_event_multiple_start_stages_config,
+        valid_registration_config_internal,
+    ]
+
+    with patch.object(Console, "print") as mock_print:
+        config(mock_context)
+        assert "invalid_event_stage_count" in mock_print.call_args[0][0]
+
+
+@patch.object(Path, "read_text")
+def test_config_multiple_event_end_stages(
+    mock_read_text,
+    mock_context,
+    valid_registration_config_internal,
+    invalid_event_multiple_end_stages_config,
+):
+    mock_read_text.side_effect = [
+        invalid_event_multiple_end_stages_config,
+        valid_registration_config_internal,
+    ]
+
+    with patch.object(Console, "print") as mock_print:
+        config(mock_context)
+        assert "invalid_event_stage_count" in mock_print.call_args[0][0]
+
+
+@patch.object(Path, "read_text")
+@patch.object(Path, "iterdir")
+def test_labels_valid(mock_iterdir, mock_read_text, mock_context, valid_labels_config):
+    mock_iterdir.return_value = [Path("pwn.png")]
+    mock_read_text.side_effect = [yaml.dump(valid_labels_config)]
+
+    with patch.object(Console, "print") as mock_print:
+        labels(mock_context)
+        mock_print.assert_called_with("[green]All labels are valid!", sep=" ", end="\n")
+
+
+@patch.object(Path, "read_text")
+@patch.object(Path, "iterdir")
+def test_labels_invalid_config(mock_iterdir, mock_read_text, mock_context, invalid_labels_config):
+    mock_read_text.side_effect = [yaml.dump(invalid_labels_config)]
+    mock_iterdir.return_value = []
+
+    with pytest.raises(Exit):
+        labels(mock_context)
+
+
+@patch.object(Path, "read_text")
+@patch.object(Path, "iterdir")
+def test_labels_missing_icons(mock_iterdir, mock_read_text, mock_context, valid_labels_config):
+    mock_read_text.side_effect = [yaml.dump(valid_labels_config)]
+    mock_iterdir.return_value = []
+
+    with pytest.raises(Exit):
+        labels(mock_context)
+
+
+@patch("toolbox.commands.verify.hash_file")
+@patch.object(Path, "is_file")
+def test_valid_verify_pictures(mock_is_file, _mock_hash_file):
+    mock_is_file.return_value = True
+
+    assert verify_pictures(Path("assets"), "", {}) is True
+
+
+@patch("toolbox.commands.verify.hash_file")
+@patch.object(Path, "is_file")
+def test_valid_verify_pictures_duplicated(mock_is_file, mock_hash_file):
+    mock_is_file.return_value = True
+    mock_hash_file.return_value = "duplicate_hash"
+    tasks_icons = {"duplicate_hash": ["41"]}
+
+    assert verify_pictures(Path("assets"), "67", tasks_icons) is True
+    assert tasks_icons["duplicate_hash"] == ["41", "67"]
+
+
+@patch.object(Path, "is_file")
+def test_missing_verify_pictures(mock_is_file):
+    mock_is_file.return_value = False
+
+    assert verify_pictures(Path("assets"), "", {}) is False
+
+
+@patch.object(Path, "iterdir")
+@patch.object(Path, "read_text")
+def test_config_valid_participant_tags(
+    mock_read_text,
+    mock_iterdir,
+    mock_context,
+    valid_event_config,
+    valid_registration_config_internal,
+    valid_deployments_config,
+    valid_participant_tags_config,
+):
+    mock_iterdir.return_value = []
+    mock_read_text.side_effect = [
+        valid_event_config,
+        valid_registration_config_internal,
+        valid_participant_tags_config,
+    ]
+
+    with patch.object(Console, "print") as mock_print:
+        config(mock_context)
+        mock_print.assert_called_with("[green]All config files are valid!", sep=" ", end="\n")
+
+
+@patch.object(Path, "read_text")
+def test_config_invalid_participant_tags(
+    mock_read_text,
+    mock_context,
+    valid_event_config,
+    valid_registration_config_internal,
+    valid_deployments_config,
+    invalid_participant_tags_config_missing_id,
+):
+    mock_read_text.side_effect = [
+        valid_event_config,
+        valid_registration_config_internal,
+        invalid_participant_tags_config_missing_id,
+    ]
+
+    with patch.object(Console, "print") as mock_print:
+        config(mock_context)
+        mock_print.assert_called_once()
+        assert "[red]" in mock_print.call_args[0][0]
+
+
+@patch.object(Path, "read_text")
+def test_config_invalid_participant_tags_missing_verified_type(
+    mock_read_text,
+    mock_context,
+    valid_event_config,
+    valid_registration_config_internal,
+    valid_deployments_config,
+    invalid_participant_tags_config_missing_verified_type,
+):
+    mock_read_text.side_effect = [
+        valid_event_config,
+        valid_registration_config_internal,
+        invalid_participant_tags_config_missing_verified_type,
+    ]
+
+    with patch.object(Console, "print") as mock_print:
+        config(mock_context)
+        mock_print.assert_called_once()
+        assert "[red]" in mock_print.call_args[0][0]

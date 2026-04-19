@@ -1,0 +1,182 @@
+from datetime import datetime
+from pathlib import Path
+from typing import ClassVar, Literal
+
+import yaml
+from pydantic import BaseModel, Field, model_validator
+from pydantic_core import PydanticCustomError
+
+
+class YamlConfig:
+    custom_filename: ClassVar[str | None] = None
+
+    @classmethod
+    def from_config_directory(cls, config_directory: Path):
+        filename = cls.custom_filename or cls.__name__.replace("Config", "").lower()
+        path = config_directory / f"{filename}.yaml"
+        config = yaml.load(path.read_text(), Loader=yaml.FullLoader)
+        if issubclass(cls, BaseModel):
+            return cls.model_validate(config)
+
+    @classmethod
+    def from_path(cls, path: Path):
+        config = yaml.load(path.read_text(), Loader=yaml.FullLoader)
+        if issubclass(cls, BaseModel):
+            return cls.model_validate(config)
+
+
+class EventStage(BaseModel):
+    name: str
+    stage_type: Literal["event-start", "event-end", "informative"] = Field(alias="type")
+    start_date: datetime = Field(..., alias="start-date")
+    end_date: datetime | None = Field(default=None, alias="end-date")
+    description: str | None = None
+
+    @model_validator(mode="after")
+    def check_stage_dates(self):
+        if self.end_date is not None:
+            try:
+                if self.end_date <= self.start_date:
+                    raise PydanticCustomError(
+                        "invalid_stage_dates",
+                        "'end-date' must be later than 'start-date'",
+                    )
+            except TypeError as exception:
+                raise PydanticCustomError(
+                    "invalid_stage_timezone",
+                    "'start-date' and 'end-date' must use the same timezone format",
+                ) from exception
+
+        return self
+
+
+class EventConfig(YamlConfig, BaseModel):
+    id: str
+    name: str | None = None
+    stages: list[EventStage] = Field(default_factory=list)
+
+    @model_validator(mode="after")
+    def check_stages(self):
+        def get_single_stage(stage_type: Literal["event-start", "event-end"]) -> EventStage:
+            matched_stages = [stage for stage in self.stages if stage.stage_type == stage_type]
+            if len(matched_stages) != 1:
+                raise PydanticCustomError(
+                    "invalid_event_stage_count",
+                    f"Exactly one {stage_type} stage is required",
+                )
+
+            return matched_stages[0]
+
+        event_start_stage = get_single_stage("event-start")
+        event_end_stage = get_single_stage("event-end")
+
+        event_start = event_start_stage.start_date
+        event_end = event_end_stage.start_date
+
+        try:
+            if event_end <= event_start:
+                raise PydanticCustomError(
+                    "invalid_event_boundaries",
+                    "event-end stage must be later than event-start stage",
+                )
+        except TypeError as exception:
+            raise PydanticCustomError(
+                "invalid_event_boundaries_timezone",
+                "event-start and event-end stages must use the same timezone format",
+            ) from exception
+
+        return self
+
+
+class RegistrationConfig(YamlConfig, BaseModel):
+    start_date: datetime = Field(..., alias="start-date")
+    end_date: datetime = Field(..., alias="end-date")
+    max_teams: int = Field(..., alias="max-teams", ge=1)
+    max_team_size: int = Field(..., alias="max-team-size", ge=1)
+    registration_mode: Literal["internal", "external"] = Field(..., alias="registration-mode")
+    max_teams_per_organization: int | None = Field(default=None, alias="max-teams-per-organization", ge=1)
+
+    @model_validator(mode="after")
+    def check_max_teams_per_org_if_registration_external(self):
+        if self.registration_mode == "external" and self.max_teams_per_organization is None:
+            raise PydanticCustomError(
+                "missing_max_teams_per_organization",
+                "'max-teams-per-organization' must be provided if registration-mode is external",
+            )
+        return self
+
+
+class Label(BaseModel):
+    id: str
+    name: str
+    description: str
+
+
+class LabelsConfig(YamlConfig, BaseModel):
+    labels: list[Label]
+
+
+class DeploymentTargetConfig(BaseModel):
+    main_compose: str | None = Field(default=None, alias="main-compose")
+    stack_network: str | None = Field(default=None, alias="stack-network")
+
+
+class DeploymentsConfig(YamlConfig, BaseModel):
+    default_target: str = Field(default="dev", alias="default-target")
+    targets: dict[str, DeploymentTargetConfig] = Field(default_factory=lambda: {"dev": DeploymentTargetConfig()})
+
+    @model_validator(mode="after")
+    def check_default_target_exists(self):
+        if self.default_target not in self.targets:
+            raise PydanticCustomError(
+                "invalid_default_target",
+                "'default-target' must reference one of the configured deployment targets",
+            )
+        return self
+
+    @classmethod
+    def from_config_directory_optional(cls, config_directory: Path):
+        path = config_directory / "deployments.yaml"
+        if not path.exists():
+            return cls()
+        return cls.from_path(path)
+
+
+class TaskDeploymentConfig(BaseModel):
+    targets: list[str] = Field(default_factory=list)
+
+
+class TaskConfig(YamlConfig, BaseModel):
+    # Full structure validated by tasks/schema.json; those fields are just defined for the toolbox.
+
+    id: str
+    name: str
+    flag_hash: str
+    labels: list[str]
+    deployment: TaskDeploymentConfig | None = None
+
+
+class ParticipantTag(BaseModel):
+    id: str
+    name: str
+    description: str
+    type: str = Field(..., alias="type")
+
+
+class ParticipantTagsConfig(YamlConfig, BaseModel):
+    custom_filename: ClassVar[str] = "participant-tags"
+    participant_tags: list[ParticipantTag] = Field(alias="participant-tags")
+
+    @model_validator(mode="after")
+    def validate_tag_types(self):
+        # Collect all unique types used in tags
+        used_types = {tag.type for tag in self.participant_tags}
+
+        # Validate that "verified" type is always present
+        if "verified" not in used_types:
+            raise PydanticCustomError(
+                "missing_verified_type",
+                "At least one tag with type 'verified' must be defined",
+            )
+
+        return self
