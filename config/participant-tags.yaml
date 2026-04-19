@@ -3,15 +3,34 @@
 # Each tag has a type that categorizes its purpose.
 
 participant-tags:
-  - # Tag name which is displayed in the UI.
-    name: "Present on event"
-    # Unique identifier for the tag, which is used in code.
+  - name: "Obecny na wydarzeniu"
     id: "present-on-event"
-    # Description of the tag, which is displayed in the UI.
-    description: "Participant is present on the event and can submit flags."
-    # Type of the tag (e.g., verified, meal)
+    description: "Uczestnik jest obecny na wydarzeniu i może wysyłać flagi."
     type: "verified"
-  - name: "Breakfast day 1"
+
+  # --- Meals: Day 1 ---
+  - name: "Śniadanie dzień 1"
     id: "breakfast-day-1"
-    description: "Participant has received breakfast on day 1."
+    description: "Uczestnik otrzymał śniadanie w pierwszym dniu wydarzenia."
+    type: "meal"
+
+  - name: "Obiad dzień 1"
+    id: "lunch-day-1"
+    description: "Uczestnik otrzymał obiad w pierwszym dniu wydarzenia."
+    type: "meal"
+
+  - name: "Kolacja dzień 1"
+    id: "dinner-day-1"
+    description: "Uczestnik otrzymał kolację w pierwszym dniu wydarzenia."
+    type: "meal"
+
+  # --- Meals: Day 2 ---
+  - name: "Śniadanie dzień 2"
+    id: "breakfast-day-2"
+    description: "Uczestnik otrzymał śniadanie w drugim dniu wydarzenia."
+    type: "meal"
+
+  - name: "Obiad dzień 2"
+    id: "lunch-day-2"
+    description: "Uczestnik otrzymał obiad w drugim dniu wydarzenia."
     type: "meal"

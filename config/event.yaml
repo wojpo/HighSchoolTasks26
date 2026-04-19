@@ -1,9 +1,9 @@
 # Event configuration
 
 # Unique identifier for the event
-id: h4k-test-edition
+id: high-school-2026
 # Human-readable name of the event displayed in the UI
-name: Hack4Krak Test Edition
+name: Hack4Krak - edycja dla Szkół Średnich
 
 # Event stages shown on the timeline.
 # Each stage is either a single point in time (only start-date) or a range (start-date + end-date).
@@ -13,20 +13,50 @@ name: Hack4Krak Test Edition
 # - event-end: when flag submission closes (point in time); exactly one required
 # - informative: info marker (point in time or range if end-date is provided)
 stages:
-  - name: Breakfast
+  - name: Rejestracja uczestników
     type: informative
-    start-date: 2025-02-15T09:00:00+01:00
-    end-date: 2025-02-15T11:00:00+01:00
+    start-date: 2026-05-23T08:00:00+02:00
+    end-date: 2026-05-23T09:30:00+02:00
 
-  - name: Competition Start
+  - name: Śniadanie
+    type: informative
+    start-date: 2026-05-23T09:00:00+02:00
+    end-date: 2026-05-23T11:00:00+02:00
+
+  - name: Rozpoczęcie konkursu
+    type: informative
+    start-date: 2026-05-23T09:30:00+02:00
+    end-date: 2026-05-23T10:00:00+02:00
+
+  - name: Publikacja zadań
     type: event-start
-    start-date: 2025-02-15T10:00:00+01:00
+    start-date: 2026-05-23T10:00:00+02:00
 
-  - name: Lunch
+  - name: Przerwa obiadowa
     type: informative
-    start-date: 2025-02-15T14:00:00+01:00
-    end-date: 2025-02-15T15:00:00+01:00
+    start-date: 2026-05-23T14:00:00+02:00
+    end-date: 2026-05-23T15:00:00+02:00
 
-  - name: Event End
+  - name: Przerwa na kolację
+    type: informative
+    start-date: 2026-05-23T20:00:00+02:00
+    end-date: 2026-05-23T21:00:00+02:00
+
+  - name: Śniadanie
+    type: informative
+    start-date: 2026-05-24T09:00:00+02:00
+    end-date: 2026-05-24T11:00:00+02:00
+
+  - name: Obiad
+    type: informative
+    start-date: 2026-05-24T14:00:00+02:00
+    end-date: 2026-05-24T15:00:00+02:00
+
+  - name: Koniec rozwiązywania zadań
     type: event-end
-    start-date: 2025-02-16T16:00:00+01:00
+    start-date: 2026-05-24T16:00:00+02:00
+
+  - name: Zakończenie konkursu
+    type: informative
+    start-date: 2026-05-23T16:00:00+02:00
+    end-date: 2026-05-23T17:00:00+02:00
