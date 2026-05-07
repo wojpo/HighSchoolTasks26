@@ -9,11 +9,6 @@ participant-tags:
     type: "verified"
 
   # --- Meals: Day 1 ---
-  - name: "Śniadanie dzień 1"
-    id: "breakfast-day-1"
-    description: "Uczestnik otrzymał śniadanie w pierwszym dniu wydarzenia."
-    type: "meal"
-
   - name: "Obiad dzień 1"
     id: "lunch-day-1"
     description: "Uczestnik otrzymał obiad w pierwszym dniu wydarzenia."
