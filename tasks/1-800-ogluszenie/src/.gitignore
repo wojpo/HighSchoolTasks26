@@ -1,0 +1,8 @@
+# I cannot commit all files due to their size, and Git LFS on GitHub is really limited
+# If you need any of them, feel free to contact me Discord: @norbiros
+
+*.aup4
+*.aup4-wal
+*.aup4-shm
+*.webm
+*.mkv

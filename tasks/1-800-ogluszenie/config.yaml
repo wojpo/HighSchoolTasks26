@@ -1,0 +1,20 @@
+$schema: "../schema.json"
+
+id: "1-800-ogluszenie"
+name: "1-800-OGŁUSZENIE"
+flag_hash: "7d4f7ea8962c7ceec6f53de19a05e7459bf7287d5f0142de0a305f7ad7cd3172"
+difficulty_estimate: "hard"
+labels:
+  - "misc"
+
+task_release_phase: main
+
+assets:
+  - description: "Nagranie audycji radiowej"
+    path: "1-800-ogluszenie.wav"
+
+display:
+  # Proposed location: Radio Kraków
+  icon_coordinates:
+    x: 24
+    y: 20
