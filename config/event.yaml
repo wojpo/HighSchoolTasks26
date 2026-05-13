@@ -55,3 +55,6 @@ stages:
     start-date: 2026-05-24T16:00:00+02:00
     end-date: 2026-05-24T17:00:00+02:00
 
+# Task release phases mark a timestamp when the task should be shown.
+task_release_phases:
+  main: 2026-05-23T10:00:00+02:00

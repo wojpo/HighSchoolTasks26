@@ -54,6 +54,7 @@ class EventConfig(YamlConfig, BaseModel):
     id: str
     name: str | None = None
     stages: list[EventStage] = Field(default_factory=list)
+    task_release_phases: dict[str, datetime]
 
     @model_validator(mode="after")
     def check_stages(self):
@@ -154,6 +155,7 @@ class TaskConfig(YamlConfig, BaseModel):
     flag_hash: str
     labels: list[str]
     deployment: TaskDeploymentConfig | None = None
+    task_release_phase: str
 
 
 class ParticipantTag(BaseModel):
