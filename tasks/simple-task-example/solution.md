@@ -1,3 +1,0 @@
-# Solution
-
-Just do it!
