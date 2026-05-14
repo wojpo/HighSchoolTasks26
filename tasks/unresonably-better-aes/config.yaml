@@ -1,0 +1,23 @@
+$schema: "../schema.json"
+
+id: "unresonably-better-aes"
+name: "Jeszcze bardziej lepszy AES++"
+flag_hash: "56578f98f240b48eae05af8b15f2a512babfc9c40e07c92ee61320ff661ebf4c"
+
+difficulty_estimate: "medium"
+labels:
+  - "crypto"
+
+assets:
+  - description: "Program do odszyfrowania wiadomości AES++ w Python"
+    path: "decoder.py"
+  - description: "Program do zaszyfrowania wiadomości AES++ w Python"
+    path: "encoder.py"
+
+display:
+  # XXXI Liceum Ogólnokształcące im. Romana Ingardena w Krakowie
+  icon_coordinates:
+    x: 19.970481559159467
+    y: 50.0876680923654
+
+task_release_phase: main
