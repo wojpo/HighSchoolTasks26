@@ -10,7 +10,7 @@ services:
       - "--providers.swarm.network=ctf-services-net"
       - "--entrypoints.web.address=:80"
       - "--entrypoints.websecure.address=:443"
-      - "--entrypoints.ssh.address=:2222"
+      - "--entrypoints.solr.address=:8983"
       - "--entrypoints.web.http.redirections.entryPoint.to=websecure"
       - "--entrypoints.web.http.redirections.entryPoint.scheme=https"
       - "--certificatesresolvers.le.acme.tlschallenge=true"
@@ -27,8 +27,8 @@ services:
         published: 443
         protocol: tcp
         mode: ingress
-      - target: 2222
-        published: 2222
+      - target: 8983
+        published: 8983
         protocol: tcp
         mode: ingress
     volumes:

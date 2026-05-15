@@ -1,0 +1,16 @@
+services:
+  solr-log4shell-server:
+    build: ./server
+    image: solr-log4shell-server
+    networks:
+      - ctf-services-net
+    deploy:
+       labels:
+         - "traefik.enable=true"
+         - "traefik.http.routers.solr.rule=Host(`solr.hack4krak.pl`)"
+         - "traefik.http.routers.solr.entrypoints=solr"
+         - "traefik.http.services.solr.loadbalancer.server.port=8983"
+
+networks:
+  ctf-services-net:
+    external: true
