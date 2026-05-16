@@ -10,6 +10,7 @@
     "@types/bun": "latest",
     "@types/express": "^5.0.6",
     "autoprefixer": "^10.5.0",
+    "concurrently": "^9.2.1",
     "drizzle-kit": "^0.31.10",
     "postcss": "^8.5.14",
     "tailwindcss": "^4.3.0",
@@ -19,16 +20,19 @@
     "typescript": "^6.0.3"
   },
   "dependencies": {
+    "@types/tailwindcss": "^3.1.0",
     "better-sqlite3": "^12.10.0",
     "dockerode": "^5.0.0",
     "drizzle-orm": "^0.45.2",
-    "express": "^5.2.1"
+    "express": "^5.2.1",
+    "pg": "^8.20.0",
+    "tar-fs": "^3.0.8"
   },
   "scripts": {
     "dev:backend": "bun run --watch backend/index.ts",
     "dev:frontend": "vite",
-    "dev": "bun run dev:backend & bun run dev:frontend",
-    "build:backend": "bun build backend --outdir dist/backend --target bun",
+    "dev": "concurrently \"bun run dev:backend\" \"bun run dev:frontend\"",
+    "build:backend": "bun build backend/index.ts --outdir dist/backend --target bun",
     "build:frontend": "vite build",
     "build": "bun run build:backend && bun run build:frontend",
     "start": "bun run dist/backend/index.js",

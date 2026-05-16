@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Instance Generator</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-zinc-950 text-white min-h-screen flex flex-col font-sans">
+  <header class="bg-black border-b border-orange-500 p-4 flex justify-center items-center h-20 shadow-md shadow-orange-900/20">
+    <img src="logowhite.png" alt="Logo" class="h-10 object-contain">
+  </header>
+
+  <main class="flex-grow flex flex-col justify-center items-center p-4">
+    <div class="max-w-lg w-full bg-zinc-900 border border-yellow-500/30 rounded-xl p-8 shadow-2xl shadow-yellow-500/10 text-center">
+      <h2 class="text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-orange-500 mb-6">
+        Instance Generator
+      </h2>
+      <p class="text-zinc-400 mb-8">
+        Click the button below to generate your private Docker instance.
+      </p>
+
+      <button id="generateBtn" class="w-full bg-gradient-to-r from-yellow-500 to-orange-600 hover:from-yellow-400 hover:to-orange-500 text-black font-bold py-3 px-6 rounded-lg transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-lg flex justify-center items-center disabled:opacity-75 disabled:cursor-not-allowed disabled:transform-none">
+        <span id="btnText">Generate Instance</span>
+        <svg id="spinner" class="animate-spin ml-2 h-5 w-5 text-black hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+        </svg>
+      </button>
+
+      <div id="resultContainer" class="mt-8 hidden">
+        <p class="text-zinc-400 text-sm mb-2">Your instance is ready at:</p>
+        <a id="resultUrl" href="#" target="_blank" class="block bg-black border border-orange-500/50 rounded-lg p-4 text-yellow-400 font-mono text-lg break-all hover:bg-zinc-800 transition-colors">
+        </a>
+      </div>
+
+      <div id="errorContainer" class="mt-6 hidden bg-red-950/50 border border-red-500/50 text-red-400 rounded-lg p-4 text-sm">
+      </div>
+    </div>
+  </main>
+
+  <script src="index.js" type="module"></script>
+</body>
+</html>

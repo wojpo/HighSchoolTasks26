@@ -1,7 +1,7 @@
 $schema: "../schema.json"
 
-id: "solr-log4shell"
-name: ""
+id: "smog4shell"
+name: "Smog4Shell"
 flag_hash: "1d0c1e6e195c267e7076ef67aa1d6b064d7cc86d677a55d6a05b275c69af339c"
 difficulty_estimate: "medium"
 labels:
