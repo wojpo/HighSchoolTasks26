@@ -13,12 +13,29 @@
     },
     "difficulty_estimate": {
       "type": "string",
-      "enum": ["easy", "medium", "hard"]
+      "enum": ["rookie", "easy", "medium", "hard"]
     },
     "labels": {
       "type": "array",
       "items": {
         "type": "string"
+      }
+    },
+    "authors": {
+      "type": "array",
+      "description": "People credited as task authors, optionally with a contact or profile URL.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string",
+            "format": "uri"
+          }
+        },
+        "required": ["name"]
       }
     },
     "task_release_phase": {
