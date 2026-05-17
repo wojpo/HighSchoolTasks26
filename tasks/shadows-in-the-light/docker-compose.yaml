@@ -1,0 +1,17 @@
+services:
+  shadows-in-the-light:
+    image: lipanski/docker-static-website:latest
+    restart: unless-stopped
+    volumes:
+      - ./src:/home/static:ro
+    networks:
+      - ctf-services-net
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.shadows-in-the-light.rule=Host(`shadows-in-the-light.hack4krak.pl`)"
+      - "traefik.http.services.shadows-in-the-light.loadbalancer.server.port=3000"
+
+networks:
+  ctf-services-net:
+    external: true
+    name: bridge

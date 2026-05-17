@@ -1,0 +1,21 @@
+$schema: "../schema.json"
+
+id: "shadows-in-the-light"
+name: "Shadows in the Light"
+flag_hash: "6da4a2b898080e8e164e5d9955809b3c8eb589c9efff6def07ece120ed0bd3cd"
+difficulty_estimate: "easy"
+labels:
+  - "web"
+  - "misc"
+
+authors:
+  - name: "Norbiros"
+    url: "https://norbiros.dev"
+
+task_release_phase: main
+
+display:
+  # Bazylika Mariacka w Krakowie
+  icon_coordinates:
+    x: 19.939282
+    y: 50.061496
