@@ -1,0 +1,31 @@
+{
+  "name": "session-snack",
+  "module": "src/index.ts",
+  "type": "module",
+  "private": true,
+  "devDependencies": {
+    "@tailwindcss/cli": "^4.2.4",
+    "@tailwindcss/postcss": "^4.2.4",
+    "@types/bun": "latest",
+    "@types/cookie-parser": "^1.4.10",
+    "@types/express": "^5.0.6",
+    "concurrently": "^9.2.1",
+    "postcss": "^8.5.14",
+    "tailwindcss": "^4.2.4",
+    "ts-node-dev": "^2.0.0"
+  },
+  "peerDependencies": {
+    "typescript": "^6.0.3"
+  },
+  "dependencies": {
+    "chart.js": "^4.5.1",
+    "cookie-parser": "^1.4.7",
+    "express": "^5.2.1",
+    "zod": "^4.4.3"
+  },
+  "scripts": {
+    "dev": "concurrently \"bunx @tailwindcss/cli -i src/frontend/styles/tailwind.css -o src/frontend/styles/style.css --watch\" \"bun run index.ts\"",
+    "build": "tsc && cp -r src/frontend dist/frontend && bunx @tailwindcss/cli -i src/frontend/styles/tailwind.css -o dist/frontend/styles/style.css --minify",
+    "start": "cd dist && node index.js"
+  }
+}

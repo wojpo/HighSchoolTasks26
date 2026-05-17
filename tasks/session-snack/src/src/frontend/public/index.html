@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+    <link rel="stylesheet" href="/styles/style.css">
+</head>
+<body class="relative bg-gray-100 text-gray-900 flex items-center justify-center min-h-screen">
+<div class="absolute inset-0 -z-10">
+    <div class="absolute inset-0 bg-gradient-to-br from-gray-800 to-black"></div>
+    <div class="absolute inset-0 opacity-[0.03]"
+         style="background-image: linear-gradient(#fff 1px, transparent 1px), linear-gradient(90deg, #fff 1px, transparent 1px);
+                    background-size: 60px 60px;">
+    </div>
+</div>
+<div class="bg-white/10 backdrop-blur-xl border border-white/20 text-white w-100 h-120 flex flex-col rounded-xl shadow-xl p-4">
+    <div class="flex flex-col gap-12 my-auto">
+        <h1 class="font-bold text-3xl font-sans mx-auto text-white/80">ZALOGUJ SIĘ</h1>
+        <div class="flex flex-col gap-8">
+            <div class="flex flex-col gap-4">
+                <div class="flex justify-between">
+                    <h2 class="font-semibold text-xl text-white/80">Username:</h2>
+                    <div class="text-md transition duration-200 text-white/50 hover:text-white/80 cursor-pointer group relative">Zapomniałeś hasła?
+                        <div class="flex text-gray-900 bg-white absolute opacity-0 transition delay-500 duration-500 group-hover:opacity-100 -top-28 left-1/2 -translate-x-1/2 border rounded-lg p-4 w-55 ">Login: kanarzyca_halina <br/> Password: bil3c1kPr0sze!! <br/> Nie ma za co :)</div>
+                    </div>
+
+                </div>
+
+                <input id="username" placeholder="RondoBerei2026" class="border w-full rounded-lg h-10 p-4 shadow-md border-white/50"/>
+            </div>
+            <div class="flex flex-col gap-4">
+                <h2 class="font-semibold text-xl text-white/80">Hasło:</h2>
+                <input type="password" id="password" class="border w-full rounded-lg h-10 p-4 shadow-md border-white/50"/>
+            </div>
+        </div>
+        <button id="loginButton"
+                class="relative w-60 h-12 mx-auto font-semibold text-lg text-blue-300
+           bg-black/40 border border-blue-400/40 rounded-lg
+           shadow-[0_0_15px_rgba(0,74,255,0.25)]
+           transition duration-200
+           hover:shadow-[0_0_25px_rgba(0,74,255,0.6)]
+           hover:border-blue-300 hover:text-blue-200
+           active:scale-[0.98]
+           overflow-hidden group">
+
+            <span class="relative z-10">ZALOGUJ SIĘ</span>
+
+            <!-- glow sweep effect -->
+            <div class="absolute inset-0 -translate-x-full group-hover:translate-x-full
+                bg-gradient-to-r from-transparent via-blue-400/20 to-transparent
+                transition duration-1500"></div>
+        </button>
+    </div>
+</div>
+<script src="/login.js"></script>
+</body>
+</html>

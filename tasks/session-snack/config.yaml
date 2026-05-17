@@ -1,0 +1,16 @@
+$schema: "../schema.json"
+
+id: "session-snack"
+name: "Session Snack"
+flag_hash: "f7818c27d06f37ff8260940c1a9c7a2fc80b89f29614b03231c3c249a9af8756"
+difficulty_estimate: "easy"
+labels:
+  - "web"
+
+task_release_phase: main
+
+display:
+  # Zajezdnia Podgórze
+  icon_coordinates:
+    x: 19.934006
+    y: 50.031480

@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>User Dashboard</title>
+
+    <link rel="stylesheet" href="/styles/style.css" />
+</head>
+
+<body class="relative flex flex-col font-sans p-4 text-white/80 min-h-screen w-screen pt-24 gap-4">
+
+<div class="absolute inset-0 -z-10">
+    <div class="absolute inset-0 bg-gradient-to-br from-gray-800 to-black"></div>
+    <div class="absolute inset-0 opacity-[0.03]"
+         style="background-image: linear-gradient(#fff 1px, transparent 1px), linear-gradient(90deg, #fff 1px, transparent 1px);
+                    background-size: 60px 60px;">
+    </div>
+</div>
+
+<div class="fixed top-0 left-0 right-0 mx-4 mt-4 h-16 z-50 rounded-2xl bg-white/10 backdrop-blur-xl shadow-lg flex items-center justify-between px-6">
+    <h1 class="ml-4 my-auto font-bold text-2xl">MPK4Krak</h1>
+    <p class="my-auto text-bold text-white/40 text-lg hidden md:block">Oficjalny system ignorowania skarg pasażerów</p>
+    <button id="logoutButton" class="mr-4 my-auto text-bold">Logout -></button>
+</div>
+
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div class="flex flex-row rounded-2xl p-4 shadow-2xl bg-gray-800">
+        <div class="flex flex-col items-center w-full gap-4">
+            <h1 class="text-2xl font-semibold mb-4">Wolne miejsce w tramwajach (cm³)</h1>
+            <canvas id="chart2" class="w-full h-64"></canvas>
+        </div>
+    </div>
+    <div class="flex flex-col rounded-2xl p-4 shadow-2xl bg-gray-800 text-center">
+        <h1 class="text-2xl font-semibold">Statystyki MPK (ostatnie 6h)</h1>
+        <div class="grid grid-cols-2 gap-4 my-auto">
+            <div class="text-center">
+                <p class="text-3xl md:text-5xl lg:text-7xl xl:text-8xl font-bold text-blue-400">1253</p>
+                <p class="text-sm text-gray-400">Spóźnień</p>
+            </div>
+            <div class="text-center">
+                <p class="text-3xl md:text-5xl lg:text-7xl xl:text-8xl font-bold text-green-400">7</p>
+                <p class="text-sm text-gray-400">Rozbitych tramwajów</p>
+            </div>
+            <div class="text-center">
+                <p class="text-3xl md:text-5xl lg:text-7xl xl:text-8xl font-bold text-yellow-400">43</p>
+                <p class="text-sm text-gray-400">Martwych pasażerów</p>
+            </div>
+            <div class="text-center">
+                <p class="text-3xl md:text-5xl lg:text-7xl xl:text-8xl font-bold text-red-400">-1586</p>
+                <p class="text-sm text-gray-400">Całkowity zysk (zł)</p>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="rounded-2xl p-4 shadow-2xl bg-gray-800 gap-4 flex flex-col text-center">
+    <h1 class="text-2xl font-semibold mb-4">Raport o incydentach (Najważniejsze)</h1>
+    <div class="overflow-x-auto">
+        <table class="w-full text-left">
+            <thead>
+            <tr class="border-b border-gray-700">
+                <th class="pb-2">Linia</th>
+                <th class="pb-2">Wydarzenie</th>
+                <th class="pb-2">Status MPK</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr class="border-b border-gray-700">
+                <td class="py-2">52</td>
+                <td class="py-2">Tramwaj utknął bo motorniczy poszedł po kebaba</td>
+                <td class="py-2">Oczekuje na czosnkowy</td>
+            </tr>
+            <tr class="border-b border-gray-700">
+                <td class="py-2">4</td>
+                <td class="py-2">Pasażer otworzył drzwi siłą i uciekł</td>
+                <td class="py-2">Straty wycenione na 5 gr</td>
+            </tr>
+            <tr class="border-b border-gray-700">
+                <td class="py-2">20</td>
+                <td class="py-2">MPK zgubiło cały wagon w rejonach Nowej Huty</td>
+                <td class="py-2">"I tak był stary"</td>
+            </tr>
+            <tr>
+                <td class="py-2">24</td>
+                <td class="py-2">Gołąb zablokował trakcję na Rynku</td>
+                <td class="py-2">Ewakuacja 3 dzielnic</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+     <div class="flex flex-col gap-4">
+        <div class="rounded-2xl p-4 shadow-2xl bg-gray-800 flex flex-col w-full">
+            <h1 class="mx-auto text-2xl font-semibold">Ranking top kanarów dnia</h1>
+            <canvas id="chart1" class="w-full h-64"></canvas>
+        </div>
+        <div class="rounded-2xl p-4 shadow-2xl bg-gray-800 flex flex-col h-full">
+            <h1 class="mx-auto text-2xl font-semibold">Najbardziej przepełnione linie</h1>
+            <ol class="list-decimal list-inside text-left mt-4 space-y-2">
+                <li>Linia 52 - 300% normy</li>
+                <li>Linia 18 - 250% normy</li>
+                <li>Linia 50 - 240% normy</li>
+                <li>Linia 4 - 200% normy</li>
+                <li>Linia 13 - 190% normy</li>
+                <li>Linia 3 - 180% normy</li>
+                <li>Linia 8 - 150% normy</li>
+                <li>Linia 20 - 130% normy</li>
+                <li>Linia 24 - 110% normy</li>
+            </ol>
+        </div>
+        <div class="rounded-2xl p-4 shadow-2xl bg-gray-800 h-full">
+            <h1 class="mx-auto text-2xl font-semibold">Metro w Krakowie</h1>
+            <ul class="list-none text-left mt-4 space-y-2">
+                <li>Planowany czas ukończenia: <span class="font-bold text-red-500">Nigdy</span></li>
+                <li>Procent postępu: <span class="font-bold text-yellow-500">0.01%</span></li>
+                <li>Liczba komisji analizujących projekt: 420</li>
+                <li>Ilość wydanych pieniędzy: 2 137 000 000 zł</li>
+                <li class="mt-4 pt-4 border-t border-gray-600 text-lg">Planowany czas dodania: <span class="font-bold text-green-400">2128 r.</span></li>
+            </ul>
+        </div>
+     </div>
+    <div class="flex flex-col md:col-span-2 rounded-2xl p-4 shadow-2xl bg-gray-800 text-center gap-4">
+        <h1 class="mx-auto text-2xl font-semibold">Status floty tramwajowej na żywo</h1>
+        <div class="overflow-x-auto">
+            <table class="w-full text-left">
+                <thead>
+                <tr class="border-b border-gray-700">
+                    <th class="pb-2">Linia</th>
+                    <th class="pb-2">Kierunek</th>
+                    <th class="pb-2">Opóźnienie</th>
+                </tr>
+                </thead>
+                <tbody id="purchaseTableBody"></tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="panel.js"></script>
+</body>
+</html>

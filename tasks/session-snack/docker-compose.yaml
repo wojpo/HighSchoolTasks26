@@ -1,0 +1,15 @@
+services:
+  session-snack:
+    image: session-snack
+    build: .
+    networks:
+      - ctf-services-net
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.session-snack.rule=Host(`session-snack.hack4krak.pl`)"
+      - "traefik.http.services.session-snack.loadbalancer.server.port=3000"
+
+networks:
+  ctf-services-net:
+    external: true
+    name: bridge
