@@ -10,7 +10,7 @@ labels:
 task_release_phase: main
 
 display:
-  # Proposed location: Radio Kraków
+  #proposed location: Elektrociepłownia Kraków
   icon_coordinates:
     x: 24
     y: 20
