@@ -3,22 +3,46 @@ import path from "path";
 import Docker from "dockerode";
 import { db } from "../db";
 import {containers} from "../db/schema.ts";
+import { fileURLToPath } from "url";
 import tar from "tar-fs";
-import { eq } from "drizzle-orm"
+import { eq, lte } from "drizzle-orm"
 import { migrate } from "drizzle-orm/node-postgres/migrator";
+import crypto from "crypto";
 
 await migrate(db, { migrationsFolder: "./drizzle" });
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const app = express()
 app.use(express.json());
 app.use(express.static(path.resolve( __dirname, "../frontend")));
+app.use(express.static(path.resolve( __dirname, "../frontend/assets")));
 app.set("trust proxy", 1);
 
 const docker = new Docker({ socketPath: "/var/run/docker.sock" });
 
 const IMAGE_NAME = "solr-log4shell-server";
 const IMAGE_CONTEXT_DIR = path.resolve(process.cwd(), "flag-server");
-const TARGET_NETWORK = "ctf-services-net";
+const TARGET_NETWORK = "bridge";
+const TIMEOUT_MS = 60 * 60 * 1000;
+
+async function cleanupExpiredContainers() {
+    const expiredAt = new Date(Date.now() - TIMEOUT_MS);
+    const expired = await db
+        .select()
+        .from(containers)
+        .where(lte(containers.createdAt, expiredAt));
+
+    for (const c of expired) {
+        try {
+            await docker.getContainer(`${c.id}-solr-log4shell-server`).remove({ force: true });
+        } catch (e) { console.error("Failed to remove container:", e); }
+        await db.delete(containers).where(eq(containers.id, c.id));
+    }
+}
+
+
+await cleanupExpiredContainers();
+setInterval(cleanupExpiredContainers, 5 * 60 * 1000);
 
 async function imageExists(name: string): Promise<boolean> {
     try {
@@ -34,20 +58,22 @@ async function imageExists(name: string): Promise<boolean> {
 
 async function buildImage(name: string, contextDir: string): Promise<void> {
     const pack = tar.pack(contextDir);
-    await new Promise<void>((resolve, reject) => {
-        docker.buildImage(pack, { t: name }, (error, stream) => {
+
+    return new Promise<void>((resolve, reject) => {
+        docker.buildImage(pack, { t: name }, async (error, stream) => {
             if (error || !stream) {
                 reject(error ?? new Error("docker build stream unavailable"));
                 return;
             }
 
-            docker.modem.followProgress(stream, (err) => {
-                if (err) {
-                    reject(err);
-                } else {
-                    resolve();
-                }
-            });
+            try {
+                await docker.modem.followProgress(stream, (err) => {
+                    if (err) reject(err);
+                    else resolve();
+                });
+            } catch (err) {
+                reject(err);
+            }
         });
     });
 }
@@ -137,12 +163,14 @@ async function run(ip: string | null) {
 
     await container.start();
 
-    const TIMEOUT_MS = 60 * 60 * 1000;
 
     setTimeout(async () => {
         try {
             await container.remove({ force: true });
-        } catch {}
+            await db.delete(containers).where(eq(containers.id, uuid));
+        } catch (e) {
+            console.error("Failed to remove container:", e);
+        }
     }, TIMEOUT_MS);
 
     await db.insert(containers).values({
@@ -193,7 +221,7 @@ app.post("/api/create", async (req, res) => {
         }
     } catch (error) {
         console.error("Error creating container:", error);
-        res.status(500).json({ error: "Internal server error" });
+        res.status(500).json({ error: "Internal server error" + error });
     }
 
 })

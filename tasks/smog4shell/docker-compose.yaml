@@ -4,16 +4,17 @@ services:
     image: smog4shell
     environment:
       DATABASE_URL: postgres://ctf:ctf@db:5432/ctf
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
     depends_on:
-      db:
-        condition: service_healthy
+      - db
     networks:
       - ctf-services-net
       - internal
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.session-snack.rule=Host(`smog4shell.hack4krak.pl`)"
-      - "traefik.http.services.session-snack.loadbalancer.server.port=3000"
+      - "traefik.http.routers.smog4shell.rule=Host(`smog4shell.hack4krak.pl`)"
+      - "traefik.http.services.smog4shell.loadbalancer.server.port=3000"
 
   db:
     image: postgres:16-alpine
