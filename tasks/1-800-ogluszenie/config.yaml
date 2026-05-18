@@ -18,7 +18,7 @@ assets:
     path: "1-800-ogluszenie.wav"
 
 display:
-  # Proposed location: Radio Kraków
+  # Radio Kraków
   icon_coordinates:
-    x: 24
-    y: 20
+    x: 19.928557
+    y: 50.071528
