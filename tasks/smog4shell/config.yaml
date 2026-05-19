@@ -2,10 +2,11 @@ $schema: "../schema.json"
 
 id: "smog4shell"
 name: "Smog4Shell"
-flag_hash: "1d0c1e6e195c267e7076ef67aa1d6b064d7cc86d677a55d6a05b275c69af339c"
+flag_hash: "16a49919dd09a4e54e1a3ddf6697f25a9403fbe9a6b2582684b05427e0d2f8ea"
 difficulty_estimate: "medium"
 labels:
   - "real_world"
+  - "pwn"
 
 task_release_phase: main
 
@@ -16,5 +17,5 @@ assets:
 display:
   #proposed location: Elektrociepłownia Kraków
   icon_coordinates:
-    x: 24
-    y: 20
+    x: 50.05332679846385
+    y: 20.006666235654688

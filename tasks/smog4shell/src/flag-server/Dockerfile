@@ -12,9 +12,13 @@ RUN useradd -m user
 
 WORKDIR /home/user/app
 
-RUN wget https://archive.apache.org/dist/lucene/solr/8.11.0/solr-8.11.0.tgz
+ARG SOLR_VERSION=8.11.0
+ARG SOLR_TGZ_SHA512=
 
-RUN tar -xzf solr-8.11.0.tgz && rm solr-8.11.0.tgz
+RUN wget "https://archive.apache.org/dist/lucene/solr/${SOLR_VERSION}/solr-${SOLR_VERSION}.tgz" \
+    && echo "${SOLR_TGZ_SHA512}  solr-${SOLR_VERSION}.tgz" | sha512sum -c - \
+    && tar -xzf "solr-${SOLR_VERSION}.tgz" \
+    && rm "solr-${SOLR_VERSION}.tgz"
 
 RUN mkdir -p /home/user/app/solr-8.11.0/server/logs && chown -R user:user /home/user/app
 

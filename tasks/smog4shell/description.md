@@ -1,13 +1,12 @@
-# Smog4Shell
-
- Może powietrze jest brudne, ale za to bilety drogie. </br>
- No ale chociaż możemy się pochwalić jedną z najbardziej restrykcyjnych Stref Czystego Transportu w Europie... </br>
- w końcu trzeba jakoś udawać że się dba o środowisko, prawda? </br>
-
- Jak dobrze że mamy coś takiego jak refer... no ale dość o polityce, przejdźmy do naprawdę ważnych spraw.
+ > Może powietrze jest brudne, ale za to bilety drogie. </br>
+ > No ale chociaż możemy się pochwalić jedną z najbardziej restrykcyjnych Strefa Czystego Transportu w Europie... </br>
+ > w końcu trzeba jakoś udawać że się dba o środowisko, prawda? </br>
+ > 
+ > Jak dobrze że mamy coś takiego jak refer... no ale dość o polityce, przejdźmy do naprawdę ważnych spraw.
 
 
-## A więc nadszedł czas na odwet...
+## Zadanie
+A więc nadszedł czas na odwet...
 
 Waszym zadaniem będzie włamanie się na serwer elektrociepłowni Krakowskiej i zaprowadzenie tam wreszcie porządku (a przy okazji zdobycie flagi):
 
@@ -19,7 +18,10 @@ Waszym zadaniem będzie włamanie się na serwer elektrociepłowni Krakowskiej i
 
 W pliku log.txt znajduje się fragment logów aplikacji. Może znajdziesz tam coś przydatnego
 
-> [!CAUTION]
-> Pamiętaj aby nie udostępniać swojego adresu serwera nikomu spoza twojego zespołu, ani nie próbować atakować serwerów innych drużyn!
 
-Powodzenia!
+**Pamiętaj aby nie udostępniać swojego adresu serwera nikomu spoza twojego zespołu, ani nie próbować atakować serwerów innych drużyn!**
+
+---
+
+
+<sub>UWAGA! Poglądy przedstawione w zadaniu mają charakter humorystyczny i nie mają związku z prawdziwymi poglądami politycznymi organizatorów.</sub>

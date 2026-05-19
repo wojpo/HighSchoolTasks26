@@ -35,11 +35,13 @@ const TIMEOUT_MS = 60 * 60 * 1000;
 
 async function cleanupExpiredContainers() {
     const expiredAt = new Date(Date.now() - TIMEOUT_MS);
-    const expired = await db
-        .select()
-        .from(containers)
-        .where(lte(containers.createdAt, expiredAt));
-
+    let expired: typeof containers.$inferSelect[] = [];
+    try {
+        expired = await db
+            .select()
+            .from(containers)
+            .where(lte(containers.createdAt, expiredAt));
+    } catch(error){}
     for (const c of expired) {
         try {
             await docker.getContainer(`${c.id}-solr-log4shell-server`).remove({ force: true });

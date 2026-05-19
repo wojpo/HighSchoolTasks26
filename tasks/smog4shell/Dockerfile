@@ -4,7 +4,7 @@ WORKDIR /app
 
 COPY src .
 
-RUN bun install
+RUN bun install --frozen-lockfile
 
 RUN bun run build
 
