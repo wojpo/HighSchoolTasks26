@@ -1,4 +1,4 @@
-import * as express from "express"
+import express from "express"
 import path from "path";
 import Docker from "dockerode";
 import { db } from "../db";
@@ -7,9 +7,10 @@ import { fileURLToPath } from "url";
 import { eq, lte } from "drizzle-orm"
 import { migrate } from "drizzle-orm/node-postgres/migrator";
 import crypto from "crypto";
-import * as z from "zod"
+import z from "zod"
 import cookieParser from "cookie-parser"
-import * as tar from "tar-fs"
+import tar from "tar-fs"
+let buildPromise: Promise<void> | null = null;
 
 await migrate(db, { migrationsFolder: "./drizzle" });
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -86,11 +87,17 @@ async function buildImage(name: string, contextDir: string): Promise<void> {
 }
 
 async function ensureImage(name: string, contextDir: string): Promise<void> {
-    if (await imageExists(name)) {
-        return;
+    if (await imageExists(name)) return;
+
+    if (!buildPromise) {
+        buildPromise = buildImage(name, contextDir).finally(() => {
+            buildPromise = null;
+        });
     }
-    await buildImage(name, contextDir);
+
+    await buildPromise;
 }
+
 
 async function ensureNetwork(name: string): Promise<void> {
     try {
@@ -173,12 +180,13 @@ async function run(session: string) {
 
     setTimeout(async () => {
         try {
-            await container.remove({ force: true });
+            await container.remove({force: true});
             await db.delete(containers).where(eq(containers.id, uuid));
         } catch (e) {
             console.error("Failed to remove container:", e);
         }
     }, TIMEOUT_MS);
+
 
     await db.insert(containers).values({
         id: uuid,
@@ -202,8 +210,17 @@ app.post("/api/login", async (req, res) => {
 })
 
 app.post("/api/create", async (req, res) => {
-    const session = req.cookies.session
-    let parsedSession = cookiesSchema.safeParse(session);
+    const rawSession = req.cookies.session
+    if(!rawSession){
+        return res.status(400).json({ error: "Cookie required"})
+    }
+    let jsonParsedSession
+    try {
+        jsonParsedSession = JSON.parse(rawSession)
+    } catch {
+        return res.status(400).json({ error: "Invalid session cookie" })
+    }
+    let parsedSession = cookiesSchema.safeParse(jsonParsedSession)
     if(!parsedSession.success){
         return res.status(400).json({ error: "Invalid session cookie" });
     }

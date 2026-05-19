@@ -6,6 +6,16 @@ document.addEventListener("DOMContentLoaded", () => {
   const resultUrl = document.getElementById("resultUrl");
   const errorContainer = document.getElementById("errorContainer");
 
+  async function login() {
+    try {
+      await fetch("/api/login", { method: "POST", credentials: "include" })
+    } catch {
+      console.error("login failed");
+    }
+  }
+
+  login()
+
   generateBtn.addEventListener("click", async () => {
     generateBtn.disabled = true;
     btnText.textContent = "Generating...";
@@ -18,7 +28,8 @@ document.addEventListener("DOMContentLoaded", () => {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
-        }
+        },
+        credentials: "include"
       });
 
       const data = await response.json();
