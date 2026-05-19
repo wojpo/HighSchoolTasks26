@@ -4,7 +4,7 @@ start-date: 2026-05-11T00:00:00+02:00
 end-date:   2026-05-22T23:59:59+02:00
 
 # Maximal number of teams registered
-max-teams: 30 # 150 / 5
+max-teams: 40 # counting people by number of teams doesn't really work cuz average isnt 5
 # Maximal number of users in a team (inclusive)
 max-team-size: 5
 
