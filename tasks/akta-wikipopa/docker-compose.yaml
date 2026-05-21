@@ -1,0 +1,15 @@
+services:
+  akta-wikipopa:
+    image: akta-wikipopa
+    build: .
+    networks:
+      - ctf-services-net
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.akta-wikipopa.rule=Host(`akta-wikipopa.hack4krak.pl`)"
+      - "traefik.http.services.akta-wikipopa.loadbalancer.server.port=3000"
+
+networks:
+  ctf-services-net:
+    external: true
+    name: bridge

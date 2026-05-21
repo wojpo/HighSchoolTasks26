@@ -1,0 +1,27 @@
+$schema: "../schema.json"
+
+id: "akta-wikipopa"
+name: "Akta Wiktora Popiołka"
+difficulty_estimate: "hard"
+flag_hash: "98b543e6cc3d3d123e8183ebc082d3c533801a7054e0fc495a657498cf3f8a6c"
+labels:
+  - "misc"
+  - "crypto"
+  - "re"
+
+authors:
+  - name: "wojpo"
+    url: "https://github.com/wojpo"
+  - name: "Goteusz" # deploy + ikonka
+    url: "https://github.com/goteusz-maszyk"
+
+
+task_release_phase: main
+
+display:
+  # sąd apelacyjny
+  icon_coordinates:
+    x: 19.961930
+    y: 50.065047
+
+
