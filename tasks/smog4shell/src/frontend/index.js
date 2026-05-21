@@ -4,6 +4,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const spinner = document.getElementById("spinner");
   const resultContainer = document.getElementById("resultContainer");
   const resultUrl = document.getElementById("resultUrl");
+  const resultTtl = document.getElementById("resultTtl");
   const errorContainer = document.getElementById("errorContainer");
 
   async function login() {
@@ -42,6 +43,8 @@ document.addEventListener("DOMContentLoaded", () => {
         const urlStr = data.url.startsWith("http") ? data.url : `http://${data.url}`;
         resultUrl.href = urlStr;
         resultUrl.textContent = urlStr;
+        const ttlMinutes = Math.max(1, Math.floor((data.ttlSeconds || 300) / 60));
+        resultTtl.textContent = `This instance will be available for ${ttlMinutes} minutes.`;
         resultContainer.classList.remove("hidden");
       } else {
         throw new Error("Invalid response from server.");

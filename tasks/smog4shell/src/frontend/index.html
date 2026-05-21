@@ -17,7 +17,7 @@
         Instance Generator
       </h2>
       <p class="text-zinc-400 mb-8">
-        Click the button below to generate your private Docker instance.
+        Click the button below to generate your private Docker instance. Each instance is available for 5 minutes.
       </p>
 
       <button id="generateBtn" class="w-full bg-gradient-to-r from-yellow-500 to-orange-600 hover:from-yellow-400 hover:to-orange-500 text-black font-bold py-3 px-6 rounded-lg transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-lg flex justify-center items-center disabled:opacity-75 disabled:cursor-not-allowed disabled:transform-none">
@@ -32,6 +32,7 @@
         <p class="text-zinc-400 text-sm mb-2">Your instance is ready at:</p>
         <a id="resultUrl" href="#" target="_blank" rel="noopener noreferrer" class="block bg-black border border-orange-500/50 rounded-lg p-4 text-yellow-400 font-mono text-lg break-all hover:bg-zinc-800 transition-colors">
         </a>
+        <p id="resultTtl" class="text-zinc-500 text-sm mt-3"></p>
       </div>
 
       <div id="errorContainer" class="mt-6 hidden bg-red-950/50 border border-red-500/50 text-red-400 rounded-lg p-4 text-sm">

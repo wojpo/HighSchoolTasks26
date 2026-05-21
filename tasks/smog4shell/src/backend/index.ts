@@ -43,9 +43,11 @@ const cookiesSchema = z.object({
 const docker = new Docker({ socketPath: "/var/run/docker.sock" });
 
 const IMAGE_NAME = "solr-log4shell-server";
+const CONTAINER_SUFFIX = "-solr-log4shell-server";
+const SOLR_HOST_SUFFIX = "-solr.hack4krak.pl";
 const IMAGE_CONTEXT_DIR = path.resolve(process.cwd(), "flag-server");
 const TARGET_NETWORK = "bridge";
-const TIMEOUT_MS = 60 * 60 * 1000;
+const TIMEOUT_MS = Number(process.env.INSTANCE_TIMEOUT_MS ?? String(5 * 60 * 1000));
 const MAX_ACTIVE_CONTAINERS = Number(process.env.MAX_ACTIVE_CONTAINERS ?? "10");
 let createQueue: Promise<void> = Promise.resolve();
 
@@ -80,7 +82,37 @@ async function cleanupExpiredContainers() {
     }
 }
 
+async function cleanupAllSolrContainers() {
+    let allContainers: any[] = [];
+    try {
+        allContainers = await docker.listContainers({ all: true });
+    } catch (error) {
+        console.error("Failed to list containers for cleanup:", error);
+        return;
+    }
 
+    for (const c of allContainers) {
+        const names = c.Names ?? [];
+        if (!names.some((name: string) => name.slice(1).endsWith(CONTAINER_SUFFIX))) {
+            continue;
+        }
+
+        try {
+            await docker.getContainer(c.Id).remove({ force: true });
+        } catch (error) {
+            console.error(`Failed to remove Solr container ${c.Id}:`, error);
+        }
+    }
+
+    try {
+        await db.delete(containers);
+    } catch (error) {
+        console.error("Failed to clear Solr container records:", error);
+    }
+}
+
+
+await cleanupAllSolrContainers();
 await cleanupExpiredContainers();
 setInterval(cleanupExpiredContainers, 5 * 60 * 1000);
 
@@ -149,7 +181,7 @@ async function ensureNetwork(name: string): Promise<void> {
 }
 
 async function isContainerRunning(id: string): Promise<boolean> {
-    const name = `${id}-solr-log4shell-server`;
+    const name = `${id}${CONTAINER_SUFFIX}`;
     try {
         const info = await docker.getContainer(name).inspect();
         return Boolean(info?.State?.Running);
@@ -184,10 +216,10 @@ async function run(session: string) {
     console.log(`Ensuring Docker network ${TARGET_NETWORK}`);
     await ensureNetwork(TARGET_NETWORK);
 
-    console.log(`Creating container ${uuid}-solr-log4shell-server`);
+    console.log(`Creating container ${uuid}${CONTAINER_SUFFIX}`);
     const container = await docker.createContainer({
         Image: IMAGE_NAME,
-        name: `${uuid}-solr-log4shell-server`,
+        name: `${uuid}${CONTAINER_SUFFIX}`,
         Env: ["SOLR_JAVA_MEM=-Xms128m -Xmx384m"],
 
         ExposedPorts: {
@@ -220,7 +252,7 @@ async function run(session: string) {
             "traefik.enable": "true",
 
             [`traefik.http.routers.solr-${uuid}.rule`]:
-                `Host(\`${uuid}.solr.hack4krak.pl\`)`,
+                `Host(\`${uuid}${SOLR_HOST_SUFFIX}\`)`,
 
             [`traefik.http.routers.solr-${uuid}.entrypoints`]:
                 "solr",
@@ -232,7 +264,7 @@ async function run(session: string) {
 
 
     await container.start();
-    console.log(`Started container ${uuid}-solr-log4shell-server`);
+    console.log(`Started container ${uuid}${CONTAINER_SUFFIX}`);
 
 
     setTimeout(async () => {
@@ -302,7 +334,7 @@ app.post("/api/create", async (req, res) => {
             }
 
             if(userDomainId) {
-                return res.json({url: `${userDomainId}.solr.hack4krak.pl`})
+                return res.json({url: `${userDomainId}${SOLR_HOST_SUFFIX}`, ttlSeconds: Math.floor(TIMEOUT_MS / 1000)})
             }
 
             const activeContainerCount = await getActiveContainerCount();
@@ -316,7 +348,7 @@ app.post("/api/create", async (req, res) => {
             }
 
             const newId = await run(SESSION.sessionId)
-            return res.json({url: `${newId}.solr.hack4krak.pl`})
+            return res.json({url: `${newId}${SOLR_HOST_SUFFIX}`, ttlSeconds: Math.floor(TIMEOUT_MS / 1000)})
         });
     } catch (error) {
         console.error("Failed to create container:", error);
@@ -324,6 +356,15 @@ app.post("/api/create", async (req, res) => {
     }
 
 })
+
+async function shutdown(signal: NodeJS.Signals) {
+    console.log(`Received ${signal}, cleaning up Solr containers`);
+    await cleanupAllSolrContainers();
+    process.exit(0);
+}
+
+process.on("SIGINT", shutdown);
+process.on("SIGTERM", shutdown);
 
 app.listen(3000, () => {
     console.log(`Server running on port 3000`)

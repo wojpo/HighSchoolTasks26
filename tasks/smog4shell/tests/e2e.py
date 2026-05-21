@@ -49,12 +49,12 @@ def _create_instance(session: requests.Session) -> str:
     check_status_code(response)
 
     url = response.json().get("url")
-    assert re.fullmatch(r"[a-f0-9]{8}\.solr\.hack4krak\.pl", url), response.text
+    assert re.fullmatch(r"[a-f0-9]{8}-solr\.hack4krak\.pl", url), response.text
     return url
 
 
 def _container_name(host: str) -> str:
-    return f"{host.split('.', 1)[0]}-solr-log4shell-server"
+    return f"{host.split('-solr.', 1)[0]}-solr-log4shell-server"
 
 
 def _request_from_container(host: str, path: str = SOLR_PATH) -> str | None:
@@ -127,7 +127,7 @@ def _container_ip(container_name: str) -> str:
 
 
 def _wait_for_log4shell_callback(host: str) -> None:
-    callback_name = f"smog4shell-callback-{host.split('.', 1)[0]}"
+    callback_name = f"smog4shell-callback-{host.split('-solr.', 1)[0]}"
     subprocess.run(["docker", "rm", "-f", callback_name], check=False, capture_output=True, timeout=10)
 
     try:
