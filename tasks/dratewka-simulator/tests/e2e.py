@@ -1,12 +1,10 @@
 import json
+import os
 import socket
 import struct
 from pathlib import Path
-from urllib.parse import urlparse
 
 import requests
-
-from toolbox.utils.test_utils import RequestHelper
 
 task_path = Path(__file__).parent.parent
 
