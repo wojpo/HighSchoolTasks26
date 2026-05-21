@@ -185,3 +185,5 @@ cython_debug/
 
 # Deployment-related files
 letsencrypt/
+
+tasks/unemployment-is-over-party/src/.data

@@ -1,0 +1,20 @@
+$schema: "../schema.json"
+
+id: "unemployment-is-over-party"
+name: "Unemployment is over party"
+flag_hash: "91cec95f9911c44f8e46b00b175771af5fd74afc9345d9000f74c5163cf220f3"
+difficulty_estimate: "easy"
+labels:
+  - "web"
+
+authors:
+  - name: "Sanielia"
+    url: "https://sanielia.dev"
+
+task_release_phase: afternoon-day-1
+
+display:
+  # Proposed location: Grodzki Labor Office in Cracow
+  icon_coordinates:
+    x: 20.059742
+    y: 50.086074
