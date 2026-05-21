@@ -3,8 +3,8 @@ import re
 import shlex
 import subprocess
 import time
-from concurrent.futures import ThreadPoolExecutor
 from collections.abc import Iterator
+from concurrent.futures import ThreadPoolExecutor
 
 import pytest
 import requests
