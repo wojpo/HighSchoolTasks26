@@ -10,7 +10,7 @@ from toolbox.utils.test_utils import RequestHelper
 
 task_path = Path(__file__).parent.parent
 
-MC_ADDRESS = urlparse(RequestHelper().base_url).hostname or "localhost"
+MC_ADDRESS = "dratewka-simulator.hack4krak.pl" if os.getenv("TASKS_TARGET") == "prod" else "localhost"
 SERVICE_PORT = 25565
 PACK_URL = "https://cdn.modrinth.com/data/K4CZat30/versions/OmbYrI4q/respack.zip"
 
