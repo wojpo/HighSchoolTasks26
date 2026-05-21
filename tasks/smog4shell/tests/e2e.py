@@ -29,8 +29,10 @@ def client() -> Iterator[requests.Session]:
 
     response = None
     for _ in range(12):
-        response = session.post(_url("/api/login"), headers={"Host": TASK_HOST}, timeout=20)
+        response = session.post(_url("/api/login"), headers={"Host": TASK_HOST}, timeout=5)
         if response.status_code == 200:
+            break
+        if response.status_code == 404:
             break
         print(f"POST /api/login -> {response.status_code} {response.text[:120]!r}", flush=True)
         time.sleep(5)
@@ -50,7 +52,7 @@ def client() -> Iterator[requests.Session]:
 
 def _create_instance(session: requests.Session) -> str:
     print("POST /api/create", flush=True)
-    response = session.post(_url("/api/create"), headers={"Host": TASK_HOST}, timeout=30)
+    response = session.post(_url("/api/create"), headers={"Host": TASK_HOST}, timeout=5)
     print(f"POST /api/create -> {response.status_code} {response.text[:200]}", flush=True)
     check_status_code(response)
 
@@ -92,10 +94,12 @@ def _wait_for_solr(host: str) -> str:
     for _ in range(SOLR_RETRIES):
         try:
             print(f"GET {host}{SOLR_PATH}", flush=True)
-            response = requests.get(_url(SOLR_PATH), headers={"Host": host}, timeout=10)
+            response = requests.get(_url(SOLR_PATH), headers={"Host": host}, timeout=5)
             print(f"GET {host}{SOLR_PATH} -> {response.status_code} {response.text[:120]!r}", flush=True)
             if response.status_code == 200 and "lucene" in response.text.lower():
                 return response.text
+            if response.status_code == 404:
+                pytest.fail(f"Solr endpoint returned 404, aborting early: {response.text[:300]}")
             last_response = response
         except requests.RequestException:
             pass

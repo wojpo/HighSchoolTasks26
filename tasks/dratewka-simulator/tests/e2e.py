@@ -31,8 +31,8 @@ def ping_mc_server(ip, port=25565):
             if not (k & 0x80):
                 return i
 
-    sock = socket.socket()
-    sock.connect((ip, port))
+    sock = socket.create_connection((ip, port), timeout=5)
+    sock.settimeout(5)
     try:
         host = ip.encode("utf-8")
         data = b""  # wiki.vg/Server_List_Ping
@@ -74,7 +74,7 @@ def test_server_alive():
 
 
 def test_pack_url_downloadable():
-    response = requests.get(PACK_URL)
+    response = requests.get(PACK_URL, timeout=5)
     assert response.status_code == 200
     # Check that we got some content (file download)
     assert len(response.content) > 0

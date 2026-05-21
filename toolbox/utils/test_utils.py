@@ -12,7 +12,7 @@ class RequestHelper:
     def __init__(
         self,
         base_url: str | None = None,
-        default_timeout: float = 10.0,
+        default_timeout: float = 5.0,
         default_host: str | None = None,
     ):
         self.base_url = base_url or os.getenv("TASKS_DEPLOYMENT_URL", "http://localhost:8000")
