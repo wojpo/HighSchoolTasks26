@@ -1,6 +1,6 @@
 services:
   dratewka-simulator:
-    image: itzg/minecraft-server:stable-java25-graalvm
+    image: itzg/minecraft-server:stable-java25
     stdin_open: true
     ports:
       - target: 25565
@@ -15,19 +15,18 @@ services:
       resources:
         limits:
           cpus: "2"
-          memory: 2G
+          memory: 4G
     environment:
       EULA: "TRUE"
       TYPE: "PURPUR"
-      MEMORY: "2G"
+      MEMORY: "3G"
       USE_MEOWICE_FLAGS: "true"
-      USE_SIMD_FLAGS: "true"
       ONLINE_MODE: "false"
       DIFFICULTY: "hard"
       GAMEMODE: "survival"
       MOTD: "czas leci!!!"
       VIEW_DISTANCE: "8"
-      SIMULATION_DISTANCE: "8"
+      SIMULATION_DISTANCE: "6"
       SPAWN_PROTECTION: "0"
       BUG_REPORT_LINK: "https://discord.gg/ASPqckzEd8"
       RESOURCE_PACK: "https://cdn.modrinth.com/data/K4CZat30/versions/OmbYrI4q/respack.zip"
