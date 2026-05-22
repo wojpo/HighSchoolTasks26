@@ -1,0 +1,25 @@
+$schema: "../schema.json"
+
+id: "polyglot"
+name: "Ale z niego poliglota!"
+flag_hash: "5df00cc585d4661a574d5929f3b3070f1da5f668e74096e30186eb0a8a9af33d"
+difficulty_estimate: "easy"
+labels:
+  - "misc"
+
+authors:
+  - name: "Norbiros"
+    url: "https://norbiros.dev"
+  # Inspiration from Kinga Ślusaryczyk
+
+task_release_phase: main
+
+assets:
+  - description: "Program w języku Python skompresowany w pliku ZIP"
+    path: "challenge.zip"
+
+display:
+  # Goethe-Institut Krakow
+  icon_coordinates:
+    x: 19.95516
+    y: 50.05273
