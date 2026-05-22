@@ -1,0 +1,22 @@
+$schema: "../schema.json"
+
+id: "logika-nie-logikuje"
+name: "Logika Nie Logikuje"
+flag_hash: "7d11d58a5512839c0b9245d26a1d995874f1a5da09f85ddaf69581de087f37d9"
+difficulty_estimate: "easy"
+labels:
+  - "misc"
+
+task_release_phase: main
+
+assets:
+  - description: "Zadanie"
+    path: "logic_gate_task.png"
+  - description: "Klucz"
+    path: "key.txt"
+
+display:
+  #KH rybitwy
+  icon_coordinates:
+    x: 50.03796077084027
+    y: 20.04067215563411
