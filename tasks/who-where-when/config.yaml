@@ -1,0 +1,19 @@
+$schema: "../schema.json"
+
+id: "who-where-when"
+name: "Kto, gdzie i kiedy ukrył stronę?"
+flag_hash: "7dfa0c2f9f96537725920bfbd5f14e38f4df5b131f9d143d04d064fbc088da61"
+difficulty_estimate: "medium"
+labels:
+  - "web"
+  - "osint"
+
+task_release_phase: main
+
+# I didn't add task authors here, because it would hint the intended solution
+
+display:
+  # Błonia
+  icon_coordinates:
+    x: 19.9095209614547
+    y: 50.06014117771099

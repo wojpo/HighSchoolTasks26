@@ -28,3 +28,6 @@ labels:
   - name: "Web"
     id: "web"
     description: "Wykorzystanie podatności aplikacji webowych do uzyskania nieautoryzowanego dostępu lub manipulacji danymi."
+  - name: "OSINT"
+    id: "osint"
+    description: "Zadania z zakresu Open Source Intelligence – pozyskiwanie, analiza i korelacja publicznie dostępnych informacji w celu zdobycia wymaganych danych."

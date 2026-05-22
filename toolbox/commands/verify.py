@@ -147,10 +147,6 @@ def tasks(context: typer.Context):
     rich.print(f"\nFinished validating all tasks: {total_tasks} tasks processed.")
     rich.print(f"[green]{valid_count} tasks are valid.")
 
-    for task_list in tasks_icons.values():
-        if len(task_list) > 1:
-            rich.print("[yellow]Following tasks have the same icons: " + ", ".join(task_list))
-
     if invalid_count > 0:
         rich.print(f"[red]{invalid_count} tasks are invalid.")
         raise Exit(code=1)

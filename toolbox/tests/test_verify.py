@@ -437,7 +437,7 @@ def test_verify_invalid_difficulty(
 @patch.object(Path, "is_dir")
 @patch.object(Path, "is_file")
 @patch.object(Path, "read_text")
-def test_verify_duplicated_pictures(
+def test_verify_allows_duplicated_pictures(
     mock_read_text,
     mock_is_file,
     mock_is_dir,
@@ -466,7 +466,8 @@ def test_verify_duplicated_pictures(
 
     tasks(mock_context)
 
-    mock_rich_print.assert_any_call("[yellow]Following tasks have the same icons: valid_task, second_task")
+    duplicate_icon_warning = "[yellow]Following tasks have the same icons: valid_task, second_task"
+    assert duplicate_icon_warning not in [call.args[0] for call in mock_rich_print.call_args_list]
 
 
 @patch.object(Path, "iterdir")
