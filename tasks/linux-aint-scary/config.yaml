@@ -1,0 +1,20 @@
+$schema: "../schema.json"
+
+id: "linux-aint-scary"
+name: "Linux Ain't Scary"
+flag_hash: "8bac72c026dbc82130311d51d5a183654497b281d1b0bcafcc7c9be433cbf77d"
+difficulty_estimate: "easy"
+labels:
+  - "misc"
+
+authors:
+  - name: "Norbiros"
+    url: "https://norbiros.dev"
+
+task_release_phase: main
+
+display:
+  # Tauron Arena Krakow
+  icon_coordinates:
+    x: 19.991667
+    y: 50.067222

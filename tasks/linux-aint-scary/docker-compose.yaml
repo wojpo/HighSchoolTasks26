@@ -1,0 +1,29 @@
+services:
+  linux-aint-scary:
+    build: .
+    image: linux-aint-scary:latest
+    restart: unless-stopped
+    tmpfs:
+      - /run
+      - /tmp
+      - /var/cache/nginx
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    cap_add:
+      - CHOWN
+      - SETUID
+      - SETGID
+    networks:
+      - ctf-services-net
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.linux-aint-scary.rule=Host(`linux-aint-scary.hack4krak.pl`)"
+      - "traefik.http.routers.linux-aint-scary.entrypoints=web"
+      - "traefik.http.services.linux-aint-scary.loadbalancer.server.port=8080"
+
+networks:
+  ctf-services-net:
+    external: true
+    name: bridge

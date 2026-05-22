@@ -1,0 +1,52 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  min-height: 100vh;
+  margin: 0;
+  background: #000;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+main {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  width: 100%;
+  min-height: 100vh;
+  padding: 0;
+}
+
+#terminal {
+  flex: 1;
+  min-height: calc(100vh - 2rem);
+  background: #000;
+}
+
+#terminal .xterm {
+  padding: 0;
+  height: 100%;
+}
+
+#terminal .xterm-viewport {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(134, 239, 172, 0.25) transparent;
+}
+
+#terminal .xterm-viewport::-webkit-scrollbar {
+  width: 6px;
+}
+
+#terminal .xterm-viewport::-webkit-scrollbar-thumb {
+  background: rgba(134, 239, 172, 0.25);
+}
+
+.status_bar {
+  margin: 0;
+  padding: 0.15rem 0.5rem;
+  color: rgba(94, 234, 212, 0.6);
+  font-size: 0.75rem;
+  background: #050a08;
+  border-top: 1px solid rgba(134, 239, 172, 0.1);
+}
