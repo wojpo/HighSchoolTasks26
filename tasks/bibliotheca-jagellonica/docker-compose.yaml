@@ -1,0 +1,24 @@
+services:
+  bibliotheca-jagellonica:
+    build: .
+    networks:
+      - ctf-services-net
+    image: bibliotheca-jagellonica
+    environment:
+      PORT: "8080"
+    read_only: true
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.bibliotheca-jagellonica.rule=Host(`bibliotheca-jagellonica.hack4krak.pl`)"
+      - "traefik.http.services.bibliotheca-jagellonica.loadbalancer.server.port=8080"
+      - "traefik.http.middlewares.bibliotheca-jagellonica-robots.headers.customresponseheaders.X-Robots-Tag=noindex, nofollow, noarchive, nosnippet, noimageindex, noai, noimageai"
+      - "traefik.http.routers.bibliotheca-jagellonica.middlewares=bibliotheca-jagellonica-robots"
+
+networks:
+  ctf-services-net:
+    external: true
+    name: bridge

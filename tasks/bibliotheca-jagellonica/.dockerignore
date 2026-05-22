@@ -1,0 +1,10 @@
+.git
+tests
+PUZZLE_PLAN.md
+solution.md
+description.md
+pictures
+assets
+src/*
+!src/go.mod
+!src/*.go

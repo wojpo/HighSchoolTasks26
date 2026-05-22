@@ -50,6 +50,17 @@ class RequestHelper:
         url, timeout, headers = self._prepare(path, host, timeout, headers)
         return requests.post(url, headers=headers, timeout=timeout, **kwargs)
 
+    def head(
+        self,
+        path: str = "",
+        host: str | None = None,
+        timeout: float | None = None,
+        headers: dict[str, str] | None = None,
+        **kwargs,
+    ) -> requests.Response:
+        url, timeout, headers = self._prepare(path, host, timeout, headers)
+        return requests.head(url, headers=headers, timeout=timeout, **kwargs)
+
 
 def find_flag(text: str, pattern: str | None = None) -> str | None:
     m = re.search(pattern or FLAG_PATTERN, text)

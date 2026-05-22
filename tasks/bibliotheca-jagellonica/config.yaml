@@ -1,0 +1,21 @@
+$schema: "../schema.json"
+
+id: "bibliotheca-jagellonica"
+name: "Bibliotheca Jagellonica"
+flag_hash: "4ed30f1ad4e85f85461b240bef0b51ce1d5fc7cc7e5c9d5e9ff0586fb549b64d"
+difficulty_estimate: "hard"
+labels:
+  - "misc"
+  - "web"
+
+authors:
+  - name: "Norbiros"
+    url: "https://norbiros.dev"
+
+task_release_phase: main
+
+display:
+  # Biblioteka Jagiellonska
+  icon_coordinates:
+    x: 19.923611
+    y: 50.060833
