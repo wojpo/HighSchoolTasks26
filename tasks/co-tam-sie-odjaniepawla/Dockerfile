@@ -1,7 +1,7 @@
 FROM debian:bookworm-slim
 
 WORKDIR /app
-COPY src/ app
+COPY src/ .
 
 EXPOSE 25565
 
