@@ -1,6 +1,7 @@
 services:
   co-tam-sie-odjaniepawla:
     image: co-tam-sie-odjaniepawla
+    build: .
     restart: unless-stopped
     ports:
       - target: 25565
