@@ -9,30 +9,48 @@ from rich.table import Table
 from toolbox.utils.deployment.deployment import (
     compose_has_build,
     create_docker_client,
+    get_active_phases,
     get_target_config,
     list_task_deployments,
     load_compose_service_specs,
     load_deployments_config,
     resolve_main_compose_path,
 )
+from toolbox.utils.deployment.models import StackStatus
 from toolbox.utils.deployment.network import (
     ensure_stack_network,
     ensure_swarm_ready,
 )
 from toolbox.utils.deployment.service import get_stack_logs
 from toolbox.utils.deployment.stack import MAIN_STACK_NAME, deploy_stack, remove_stack
-from toolbox.utils.deployment.stats import get_stack_status
+from toolbox.utils.deployment.stats import get_all_service_stats, get_existing_stacks, get_stack_status
 
 app = typer.Typer(no_args_is_help=True, help="Manage CTF task services")
 
 
-def _get_deployments(context: typer.Context, task: str | None, target: str | None):
+def _resolve_phase_filter(context: typer.Context, phase: str | None, active_phases: bool) -> set[str] | None:
+    if phase and active_phases:
+        raise typer.BadParameter("--phase and --active-phases are mutually exclusive")
+    if phase:
+        return {phase}
+    if active_phases:
+        return get_active_phases(context.obj["config_directory"])
+    return None
+
+
+def _get_deployments(
+    context: typer.Context,
+    task: str | None,
+    target: str | None,
+    phase_filter: set[str] | None = None,
+):
     requested_tasks = {task} if task else None
     deployments = list_task_deployments(
         context.obj["tasks_directory"],
         context.obj["config_directory"],
         requested_target=target,
         requested_tasks=requested_tasks,
+        phase_filter=phase_filter,
     )
     if task and not deployments:
         raise typer.BadParameter(f"Task '{task}' does not define a deployable compose stack")
@@ -60,9 +78,14 @@ def status(
     context: typer.Context,
     task: Annotated[str | None, typer.Argument(help="Show status for specific task (omit for all tasks)")] = None,
     target: Annotated[str | None, typer.Option("--target", help="Filter by deploy target")] = None,
+    phase: Annotated[str | None, typer.Option("--phase", help="Filter by task release phase")] = None,
+    active_phases: Annotated[
+        bool, typer.Option("--active-phases", help="Filter to phases whose start time has passed")
+    ] = False,
 ):
     """Show status of all stacks including the main stack."""
-    deployments = _get_deployments(context, task, target)
+    phase_filter = _resolve_phase_filter(context, phase, active_phases)
+    deployments = _get_deployments(context, task, target, phase_filter)
 
     if not target:
         target = load_deployments_config(context.obj["config_directory"]).default_target
@@ -81,10 +104,19 @@ def status(
 
     for target_name in sorted(by_target):
         docker = create_docker_client()
+        existing_stacks = get_existing_stacks(docker)
+        status_stack_names = {deployment.stack_name for deployment in by_target[target_name]}
+        if not task:
+            status_stack_names.add(MAIN_STACK_NAME)
+        service_stats = (
+            get_all_service_stats(docker)
+            if existing_stacks is not None and not status_stack_names.isdisjoint(existing_stacks)
+            else {}
+        )
         if not task:
             main_compose = resolve_main_compose_path(context.obj["config_directory"], target_name, None)
             expected_services = load_compose_service_specs(main_compose)
-            stack_status = get_stack_status(docker, MAIN_STACK_NAME, expected_services)
+            stack_status = _stack_status(docker, MAIN_STACK_NAME, expected_services, existing_stacks, service_stats)
             table.add_row(
                 MAIN_STACK_NAME,
                 target_name,
@@ -97,7 +129,13 @@ def status(
             )
         for deployment in by_target[target_name]:
             expected_services = load_compose_service_specs(deployment.compose_file)
-            stack_status = get_stack_status(docker, deployment.stack_name, expected_services)
+            stack_status = _stack_status(
+                docker,
+                deployment.stack_name,
+                expected_services,
+                existing_stacks,
+                service_stats,
+            )
             table.add_row(
                 deployment.task_id,
                 target_name,
@@ -112,15 +150,26 @@ def status(
     rich.print(table)
 
 
+def _stack_status(docker, stack_name, expected_services, existing_stacks, service_stats) -> StackStatus:
+    if existing_stacks is None:
+        return StackStatus("swarm inactive", "docker swarm is not initialized on this target")
+    return get_stack_status(docker, stack_name, expected_services, existing_stacks, service_stats)
+
+
 @app.command("up")
 def up(
     context: typer.Context,
     task: Annotated[str | None, typer.Argument(help="Task to start (omit for all tasks)")] = None,
     build: Annotated[bool, typer.Option("--build/--no-build", help="Build images before starting")] = True,
     target: Annotated[str | None, typer.Option("--target", help="Target environment")] = None,
+    phase: Annotated[str | None, typer.Option("--phase", help="Only start tasks in this release phase")] = None,
+    active_phases: Annotated[
+        bool, typer.Option("--active-phases", help="Start all tasks whose release phase has begun")
+    ] = False,
 ):
     """Start one task or all tasks (default)."""
-    deployments = _get_deployments(context, task, target)
+    phase_filter = _resolve_phase_filter(context, phase, active_phases)
+    deployments = _get_deployments(context, task, target, phase_filter)
 
     if not deployments:
         rich.print("[yellow]Nothing to start.[/yellow]")
@@ -154,12 +203,17 @@ def down(
     task: Annotated[str | None, typer.Argument(help="Task to stop")] = None,
     all_tasks: Annotated[bool, typer.Option("--all", help="Stop all tasks")] = False,
     target: Annotated[str | None, typer.Option("--target", help="Target environment")] = None,
+    phase: Annotated[str | None, typer.Option("--phase", help="Stop only tasks in this release phase")] = None,
+    active_phases: Annotated[
+        bool, typer.Option("--active-phases", help="Stop all tasks whose release phase has begun")
+    ] = False,
 ):
     """Stop one task or all tasks (with --all flag)."""
-    if not task and not all_tasks:
-        raise typer.BadParameter("Specify a TASK or use --all to stop everything")
+    if not task and not all_tasks and not phase and not active_phases:
+        raise typer.BadParameter("Specify a TASK, --phase, --active-phases, or use --all to stop everything")
 
-    deployments = _get_deployments(context, task, target)
+    phase_filter = _resolve_phase_filter(context, phase, active_phases)
+    deployments = _get_deployments(context, task, target, phase_filter)
 
     if not deployments:
         rich.print("[yellow]No tasks to stop.[/yellow]")
@@ -192,13 +246,17 @@ def restart(
     all_tasks: Annotated[bool, typer.Option("--all", help="Restart all tasks")] = False,
     build: Annotated[bool, typer.Option("--build/--no-build", help="Build images before restarting")] = True,
     target: Annotated[str | None, typer.Option("--target", help="Target environment")] = None,
+    phase: Annotated[str | None, typer.Option("--phase", help="Restart only tasks in this release phase")] = None,
+    active_phases: Annotated[
+        bool, typer.Option("--active-phases", help="Restart all tasks whose release phase has begun")
+    ] = False,
 ):
     """Restart one task or all tasks (with --all flag)."""
-    if not task and not all_tasks:
-        raise typer.BadParameter("Specify a TASK or use --all to restart everything")
+    if not task and not all_tasks and not phase and not active_phases:
+        raise typer.BadParameter("Specify a TASK, --phase, --active-phases, or use --all to restart everything")
 
-    down(context, task, all_tasks, target)
-    up(context, task, build, target)
+    down(context, task, all_tasks, target, phase, active_phases)
+    up(context, task, build, target, phase, active_phases)
 
 
 @app.command("logs")
