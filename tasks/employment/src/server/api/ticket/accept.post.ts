@@ -37,7 +37,7 @@ export default defineEventHandler(async (event) => {
     id: uuidv4(),
     ticket_id: ticketId,
     sender: 'admin',
-    content: 'Gratulacje! Twój wniosek został rozpatrzony pozytywnie. Twój login do systemu: Hack4KrakCTF{H3LLO-I-W0ULD-L1K3-T0-4PPLY}',
+    content: 'Gratulacje! Twój wniosek został rozpatrzony pozytywnie. Twój login do systemu: hack4KrakCTF{H3LLO-I-W0ULD-L1K3-T0-4PPLY}',
     created_at: new Date()
   }).execute()
 
