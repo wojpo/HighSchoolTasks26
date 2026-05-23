@@ -13,17 +13,17 @@ services:
       FLAG: "hack4KrakCTF{u64_ticket_jackpot_after_hours}"
     networks:
       - ctf-services-net
-    cap_drop:
-      - ALL
-    cap_add:
-      - SETGID
-      - SETUID
-      - CHOWN
-      - DAC_OVERRIDE
-      - NET_BIND_SERVICE
-      - SYS_CHROOT
-    security_opt:
-      - no-new-privileges:true
+    # cap_drop:
+    #   - ALL
+    # cap_add:
+    #   - SETGID
+    #   - SETUID
+    #   - CHOWN
+    #   - DAC_OVERRIDE
+    #   - NET_BIND_SERVICE
+    #   - SYS_CHROOT
+    # security_opt:
+    #   - no-new-privileges:true
 
 networks:
   ctf-services-net:
