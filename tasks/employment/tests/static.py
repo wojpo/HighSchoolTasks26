@@ -4,7 +4,7 @@ import yaml
 
 from toolbox.utils.hash import hash_flag
 
-EXPECTED_FLAG = "hack4KrakCTF{H3LLO-I-W0ULD-L1K3-T0-4PPLY}"
+EXPECTED_FLAG = "H3LLO-I-W0ULD-L1K3-T0-4PPLY"
 EXPECTED_FLAG_HASH = hash_flag(EXPECTED_FLAG)
 
 task_path = Path(__file__).parent.parent
