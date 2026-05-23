@@ -24,7 +24,7 @@ stages:
 
   - name: Publikacja zadań
     type: event-start
-    start-date: 2026-05-23T10:00:00+02:00
+    start-date: 2026-05-22T10:00:00+02:00
 
   - name: "Prelekcja: Karol Bojke z CERT Polska"
     type: informative
@@ -62,4 +62,4 @@ stages:
 
 # Task release phases mark a timestamp when the task should be shown.
 task_release_phases:
-  main: 2026-05-23T10:00:00+02:00
+  main: 2026-05-22T10:00:00+02:00

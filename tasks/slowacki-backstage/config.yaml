@@ -3,7 +3,7 @@ $schema: "../schema.json"
 id: "slowacki-backstage"
 name: "Kulisy Słowackiego"
 flag_hash: "580ec4e96a3458140e14f72afb84c5c5cab6e6c2781c2cffe59ecc76ba748806"
-difficulty_estimate: "easy"
+difficulty_estimate: "medium"
 labels:
   - "reverse_engineering"
   - "pwn"

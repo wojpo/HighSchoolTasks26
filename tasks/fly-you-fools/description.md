@@ -14,4 +14,6 @@ W `fly-you-fools.html` załączona jest animacja, poczekajcie *chwilę*, a waszy
 - Animacja jest w pełni przewidywalna, za każdym razem wzór jest taki sam.
 - Do stworzenia animacji użyliśmy [Scratcha](https://scratch.mit.edu/)
 
-*Wszelkie podobieństwa do postaci publicznych są całkowicie przypadkowe.*
+---
+
+<sub>Treść zadania ma charakter humorystyczny i nie wyraża poglądów organizatorów. Postaci są fikcyjne, a wszelkie podobieństwa do realnych osób publicznych są całkowicie przypadkowe.</sub>

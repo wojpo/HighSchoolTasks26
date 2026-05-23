@@ -1,6 +1,6 @@
 ## Opis
 
-Panem Kazimierzem w tym zadaniu jest model językowy. Dostęp do niego realizowany jest przez stronę [Open WebUI](https://openwebui.com/).
+Panem Januszem w tym zadaniu jest model językowy. Dostęp do niego realizowany jest przez stronę [Open WebUI](https://openwebui.com/).
 
 Model działa pod bardzo rygorystycznym poleceniem systemowym, które zawiera flagę oraz instrukcje zabraniające jej ujawnienia użytkownikowi.
 

@@ -7,14 +7,14 @@
 
 ## Zadanie
 
-Dla rozluźnienia atmosfery mamy dla was do zrobienia speedrun minecrafta. Jak szybko wam się uda?
+Dla rozluźnienia atmosfery mamy dla Was do zrobienia speedrun Minecrafta. Jak szybko Wam się uda?
 Adres: `hack4krak.pl`
 
-Flagę dostaniecie jak tylko przejdziecie grę.
+Flagę dostaniecie, jak tylko przejdziecie grę.
 
 ## Wskazówki
 
-- Serwer jest non-premium, więc nie trzeba miec kupionej gry, żeby na niego wejść. Możesz pobrać i uruchomić ją w ten sposób:
+- Serwer jest non-premium, więc nie trzeba mieć kupionej gry, żeby na niego wejść. Możesz pobrać i uruchomić ją w ten sposób:
 ```bash
 git clone https://github.com/FabricMC/fabric-example-mod.git && cd fabric-example-mod && ./gradlew runClient
 ```

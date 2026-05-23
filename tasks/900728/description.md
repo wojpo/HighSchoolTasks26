@@ -1,16 +1,16 @@
 > Dlaczego w każdym zadaniu z dźwiękiem jest piosenka Taco?
 > 
-> Niewiem, może dlatego że podczas robienia tych zadań nasze mózgi nie mogły ogarnąć już nic szybszego...
+> Nie wiem, może dlatego, że podczas robienia tych zadań nasze mózgi nie mogły ogarnąć już nic szybszego...
 > 
 > No cóż... łapcie kolejną fajną piosenkę. 900728?! Cóż, najwidoczniej musiał się jakiś bit w nazwie przestawić.
 
 ## Zadanie
 
-W tym zadaniu otrzymacię plik .wav w którym znajduje się ukryta flaga.
+W tym zadaniu otrzymacie plik `.wav`, w którym znajduje się ukryta flaga.
 
 ## Wskazówki
 
-Pamiętaj że od beatu ważniejsze są bity.
+Pamiętaj, że od beatu ważniejsze są bity.
 
 ---
 UWAGA: Materiał powstał w celach edukacyjnych. Nie ma on na celu naruszenia praw autorskich ani promowania piractwa.

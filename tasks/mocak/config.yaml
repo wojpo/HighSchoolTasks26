@@ -14,7 +14,7 @@ assets:
     path: "mocak.png"
 
 display:
-  # Proposed location: MOCAK
+  # MOCAK - Muzeum Sztuki Współczesnej w Krakowie
   icon_coordinates:
     x: 19.961348
     y: 50.047866

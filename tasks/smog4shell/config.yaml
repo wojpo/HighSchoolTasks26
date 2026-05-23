@@ -17,5 +17,5 @@ assets:
 display:
   #proposed location: Elektrociepłownia Kraków
   icon_coordinates:
-    x: 50.05332679846385
-    y: 20.006666235654688
+    x: 20.006666235654688
+    y: 50.05332679846385

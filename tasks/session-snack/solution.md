@@ -6,9 +6,9 @@ Zamiast bezpiecznego mechanizmu, takiego jak losowy identyfikator sesji generowa
 
 W praktyce oznaczało to, że użytkownik mógł:
 
--odczytać zawartość ciasteczka poprzez jego zdekodowanie,
--dowolnie modyfikować przechowywane dane (np. role, uprawnienia lub identyfikator użytkownika),
--ponownie zakodować zmienione dane i przesłać je do serwera.
+- odczytać zawartość ciasteczka poprzez jego zdekodowanie,
+- dowolnie modyfikować przechowywane dane (np. role, uprawnienia lub identyfikator użytkownika),
+- ponownie zakodować zmienione dane i przesłać je do serwera.
 
 Serwer bezkrytycznie ufał zawartości otrzymanego cookie i nie przeprowadzał żadnej dodatkowej weryfikacji. W efekcie mechanizm kontroli dostępu był faktycznie realizowany po stronie klienta.
 

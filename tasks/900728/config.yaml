@@ -14,7 +14,7 @@ assets:
     path: "900728.wav"
 
 display:
-  # Tauron Arena Kraków
+  # ICE Kraków Congress Centre
   icon_coordinates:
-    x: 50.06776973621363
-    y: 19.99139210256592
+    x: 19.929167
+    y: 50.046944

@@ -20,7 +20,7 @@ document.querySelectorAll('source[media]').forEach(source => {
 });
 ```
 
-Alternatywnie można ręcznie odnaleźć bezpośredni adres obrazka w kodzie źródłowym stroy.
+Alternatywnie można ręcznie odnaleźć bezpośredni adres obrazka w kodzie źródłowym strony.
 
 Po otwarciu obrazu okazuje się, że został on zmodyfikowany — przedstawiona postać trzyma flagę z logiem Hack4Krak.
 

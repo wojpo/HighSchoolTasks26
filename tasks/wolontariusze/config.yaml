@@ -6,6 +6,7 @@ flag_hash: "33b65417c8414782c8055a3a57de6bc5fe0a4695d6020e91494cf26ef809e041"
 difficulty_estimate: "medium"
 labels:
   - "reverse_engineering"
+  - "web"
 
 authors:
   - name: "Goteusz"
