@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">TicketVerifier</string>
+    <string name="action_settings">Settings</string>
+    <string name="first_fragment_label">Kontrola Biletów</string>
+    <string name="nfc_scanner_title">Kontrola Biletów</string>
+    <string name="nfc_ready">Przyłóż bilet aby sprawdzić</string>
+    <string name="nfc_not_available">jak mozna nie miec nfc</string>
+    <string name="nfc_disabled">daj mi nfc</string>
+    <string name="tag_scanned">Bilet zestanowany!</string>
+    <string name="no_text_found">to chyba nie bilet (pusta karta)</string>
+    <string name="error_reading">kara chyba jest rozwalona</string>
+</resources>

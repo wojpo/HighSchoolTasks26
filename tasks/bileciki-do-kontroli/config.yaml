@@ -1,0 +1,21 @@
+$schema: "../schema.json"
+
+id: "bileciki-do-kontroli"
+name: "Bileciki do kontroli!"
+flag_hash: "1c701f65f7f8eedbf5c4521c8c249fbc16061275feabe8782dcce39c0700e947"
+difficulty_estimate: "medium"
+labels:
+  - "misc"
+  - "physical"
+
+authors:
+  - name: "Goteusz"
+    url: "https://github.com/goteusz-maszyk"
+
+task_release_phase: kanar
+
+display:
+  # kmł
+  icon_coordinates:
+    x: 19.932514
+    y: 50.081482

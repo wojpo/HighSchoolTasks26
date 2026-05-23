@@ -78,6 +78,7 @@ task_release_phases:
   start: 2026-05-22T10:00:00+02:00
   # Phase 2 — 90 min after on-site start, before prelekcja
   morning-day-1: 2026-05-23T11:00:00+02:00
+  kanar: 2026-05-23T14:00:00+02:00
   # Phase 3 — 1h after lunch ends, afternoon energy injection
   afternoon-day-1: 2026-05-23T16:00:00+02:00
   # Phase 4 — just after breakfast on day 2
