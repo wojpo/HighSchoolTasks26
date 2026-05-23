@@ -12,7 +12,7 @@ authors:
   - name: "Goteusz"
     url: "https://github.com/goteusz-maszyk"
 
-task_release_phase: main
+task_release_phase: morning-day-2
 
 assets:
   - description: "Animacja"

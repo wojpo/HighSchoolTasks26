@@ -8,7 +8,7 @@ labels:
   - "reverse_engineering"
   - "pwn"
 
-task_release_phase: main
+task_release_phase: morning-day-1
 
 assets:
   - description: "Program zaplecza scenicznego [do pobrania i analizy]"

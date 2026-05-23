@@ -7,7 +7,7 @@ difficulty_estimate: "easy"
 labels:
   - "misc"
 
-task_release_phase: main
+task_release_phase: start
 
 assets:
   - description: "Zadanie"

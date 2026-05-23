@@ -7,7 +7,7 @@ difficulty_estimate: "medium"
 labels:
   - "misc"
 
-task_release_phase: main
+task_release_phase: start
 
 assets:
   - description: "Zdjęcie z naszej wycieczki w MOCAKu"

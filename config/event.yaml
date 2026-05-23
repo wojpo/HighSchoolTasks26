@@ -24,7 +24,7 @@ stages:
 
   - name: Publikacja zadań
     type: event-start
-    start-date: 2026-05-22T10:00:00+02:00
+    start-date: 2026-05-23T10:00:00+02:00
 
   - name: "Prelekcja: Karol Bojke z CERT Polska"
     type: informative
@@ -60,6 +60,25 @@ stages:
     start-date: 2026-05-24T16:00:00+02:00
     end-date: 2026-05-24T17:00:00+02:00
 
+#  ┌─────────────────┬──────────────┬───────┬────────────────────────────────┐
+#  │      Phase      │     Time     │ Tasks │           Diff. mix            │
+#  ├─────────────────┼──────────────┼───────┼────────────────────────────────┤
+#  │ start           │ 22 May 10:00 │ 8     │ rookie / easy×3 / med×3 / hard │
+#  ├─────────────────┼──────────────┼───────┼────────────────────────────────┤
+#  │ morning-day-1   │ 23 May 11:00 │ 6     │ easy×5 / medium                │
+#  ├─────────────────┼──────────────┼───────┼────────────────────────────────┤
+#  │ afternoon-day-1 │ 23 May 16:00 │ 3     │ easy / medium / hard           │
+#  ├─────────────────┼──────────────┼───────┼────────────────────────────────┤
+#  │ morning-day-2   │ 24 May 11:15 │ 4     │ easy×2 / medium×2              │
+#  └─────────────────┴──────────────┴───────┴────────────────────────────────┘
+
 # Task release phases mark a timestamp when the task should be shown.
 task_release_phases:
-  main: 2026-05-22T10:00:00+02:00
+  # Phase 1 — preview opener, aligned with event-start
+  start: 2026-05-22T10:00:00+02:00
+  # Phase 2 — 90 min after on-site start, before prelekcja
+  morning-day-1: 2026-05-23T11:00:00+02:00
+  # Phase 3 — 1h after lunch ends, afternoon energy injection
+  afternoon-day-1: 2026-05-23T16:00:00+02:00
+  # Phase 4 — just after breakfast on day 2
+  morning-day-2: 2026-05-24T11:15:00+02:00

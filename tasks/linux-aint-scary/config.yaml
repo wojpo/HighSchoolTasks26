@@ -11,7 +11,7 @@ authors:
   - name: "Norbiros"
     url: "https://norbiros.dev"
 
-task_release_phase: main
+task_release_phase: start
 
 display:
   # Tauron Arena Krakow

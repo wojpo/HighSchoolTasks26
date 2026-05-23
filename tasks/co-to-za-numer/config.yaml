@@ -13,7 +13,7 @@ authors:
   - name: "Goteusz" # deploy + ikonka
     url: "https://github.com/goteusz-maszyk"
 
-task_release_phase: main
+task_release_phase: start
 
 display:
   # Proposed location: Nowohuckie Centrum Kultury
