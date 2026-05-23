@@ -6,7 +6,7 @@ from pathlib import Path
 from toolbox.utils.test_utils import RequestHelper, check_status_code, load_flag_hash, validate_flag_hash
 
 task_path = Path(__file__).parent.parent
-default_host = None
+default_host = "unemployment-is-over-party.hack4krak.pl"
 
 
 def test_ticket_closed_after_reply():
