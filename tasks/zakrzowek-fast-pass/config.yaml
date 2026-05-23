@@ -2,7 +2,7 @@ $schema: "../schema.json"
 
 id: "zakrzowek-fast-pass"
 name: "Zakrzowek Fast Pass"
-flag_hash: "1b74385cf948b97dab59b20eb26e27aa077a8ac3e5a00c1306c67684c12c425f"
+flag_hash: "546fd91d96b3c40ebbe188760a697e932776b9c973056c705f30eb41bcddea75"
 difficulty_estimate: "rookie"
 labels:
   - "web"
