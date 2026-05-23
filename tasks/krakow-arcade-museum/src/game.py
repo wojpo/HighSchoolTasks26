@@ -478,8 +478,7 @@ def run_line_mode() -> int:
 
     if os.environ.get("SSH_ORIGINAL_COMMAND") is None and not sys.stdin.isatty():
         print(
-            "\nTen klient SSH nie przydzielil terminala. "
-            "Polacz sie komenda: ssh -tt player@HOST -p PORT",
+            "\nTen klient SSH nie przydzielil terminala. Polacz sie komenda: ssh -tt player@HOST -p PORT",
             flush=True,
         )
         while True:

@@ -178,7 +178,7 @@ def test_left_edge_teleports_back_to_right_side():
 def test_hatch_renders_as_flag_marker():
     game = load_game()
 
-    assert game.screen_tile(game.FLAG_X, game.FLAG_Y, game.State()) == "⚑"
+    assert game.screen_tile(game.FLAG_X, game.FLAG_Y, game.State()) == "F"
 
 
 def test_parallel_sessions_keep_separate_state():
