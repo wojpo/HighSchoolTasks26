@@ -13,3 +13,4 @@ Przydałoby się nie dostać mandatu, bo kosztuje nawet do 500 punktów.
 ## Wskazówki
 
 - Dostaliście coś w kopertach co może się przydać...
+- Może mieć to związek z alternatywnymi formatami dla JSONa
