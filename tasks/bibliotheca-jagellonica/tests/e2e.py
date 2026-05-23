@@ -204,6 +204,8 @@ def test_full_solution_path() -> None:
         check_status_code(resp, 206)
         flag += resp.text
 
+    m = re.fullmatch(r"hack4KrakCTF\{(.+)\}", flag)
+    assert m is not None
     flag_hash = load_flag_hash(task_path)
     assert flag_hash is not None
-    assert validate_flag_hash(flag, flag_hash)
+    assert validate_flag_hash(m.group(1), flag_hash)
