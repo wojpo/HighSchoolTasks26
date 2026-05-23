@@ -36,6 +36,11 @@ stages:
     start-date: 2026-05-23T14:00:00+02:00
     end-date: 2026-05-23T15:00:00+02:00
 
+  - name: "Prelekcja: Zawód programista - czyli fakty i mity o branży IT"
+    type: informative
+    start-date: 2026-05-23T15:00:00+02:00
+    end-date: 2026-05-23T16:00:00+02:00
+
   - name: Przerwa na kolację
     type: informative
     start-date: 2026-05-23T20:00:00+02:00
