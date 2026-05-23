@@ -5,7 +5,7 @@ import { db } from "../db";
 import {containers} from "../db/schema.ts";
 import { fileURLToPath } from "url";
 import { eq, lte } from "drizzle-orm"
-import { migrate } from "drizzle-orm/node-postgres/migrator";
+import { migrate } from "drizzle-orm/bun-sqlite/migrator";
 import crypto from "crypto";
 import z from "zod"
 import cookieParser from "cookie-parser"
@@ -254,6 +254,7 @@ async function removeInstance(id: string): Promise<void> {
 
 async function getActiveContainerCount(): Promise<number> {
     const knownContainers = await db.select().from(containers);
+    const knownIds = new Set(knownContainers.map((container) => container.id));
     let activeCount = 0;
 
     for (const knownContainer of knownContainers) {
@@ -262,6 +263,25 @@ async function getActiveContainerCount(): Promise<number> {
         } else {
             await db.delete(containers).where(eq(containers.id, knownContainer.id));
         }
+    }
+
+    try {
+        const allContainers = await docker.listContainers({ all: true });
+        for (const c of allContainers) {
+            const name = (c.Names ?? [])
+                .map((containerName: string) => containerName.slice(1))
+                .find((containerName: string) => containerName.endsWith(CONTAINER_SUFFIX));
+            if (!name) {
+                continue;
+            }
+
+            const id = name.slice(0, -CONTAINER_SUFFIX.length);
+            if (!knownIds.has(id)) {
+                await docker.getContainer(c.Id).remove({ force: true });
+            }
+        }
+    } catch (error) {
+        console.error("Failed to clean orphan Solr containers:", error);
     }
 
     return activeCount;
@@ -315,7 +335,7 @@ async function run(session: string) {
                 `Host(\`${uuid}${SOLR_HOST_SUFFIX}\`)`,
 
             [`traefik.http.routers.solr-${uuid}.entrypoints`]:
-                "solr",
+                "websecure,solr",
 
             [`traefik.http.services.solr-${uuid}.loadbalancer.server.port`]:
                 "8983",

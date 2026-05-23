@@ -6,7 +6,7 @@ services:
     command:
       - "--providers.docker=true"
       - "--providers.docker.exposedByDefault=false"
-      - "--providers.docker.network=bridge"
+      - "--providers.docker.network=ctf-services-net"
       - "--entrypoints.web.address=:80"
       - "--entrypoints.websecure.address=:443"
       - "--entrypoints.solr.address=:8983"
@@ -41,8 +41,11 @@ services:
       - "/var/run/docker.sock:/var/run/docker.sock"
     networks:
       - bridge-net
+      - ctf-services-net
 
 networks:
   bridge-net:
     external: true
     name: bridge
+  ctf-services-net:
+    external: true

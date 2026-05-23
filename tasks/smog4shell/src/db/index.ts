@@ -1,8 +1,13 @@
-import { drizzle } from "drizzle-orm/node-postgres";
-import { Pool } from "pg";
+import { mkdirSync } from "fs";
+import path from "path";
+import { Database } from "bun:sqlite";
+import { drizzle } from "drizzle-orm/bun-sqlite";
 
-const pool = new Pool({
-    connectionString: process.env.DATABASE_URL,
-});
+const sqlitePath = process.env.SQLITE_DB_PATH ?? "./data/smog4shell.sqlite";
+mkdirSync(path.dirname(sqlitePath), { recursive: true });
 
-export const db = drizzle(pool);
+const sqlite = new Database(sqlitePath);
+sqlite.exec("PRAGMA journal_mode = WAL");
+sqlite.exec("PRAGMA foreign_keys = ON");
+
+export const db = drizzle(sqlite);
