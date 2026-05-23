@@ -1,8 +1,7 @@
-from pathlib import Path
-
 from toolbox.utils.test_utils import RequestHelper, check_status_code
 
 request = RequestHelper(default_host="akta-wikipopa.hack4krak.pl")
+
 
 def test_index_page_loads():
     response = request.get("/")

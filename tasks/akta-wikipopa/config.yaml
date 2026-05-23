@@ -7,7 +7,7 @@ flag_hash: "98b543e6cc3d3d123e8183ebc082d3c533801a7054e0fc495a657498cf3f8a6c"
 labels:
   - "misc"
   - "crypto"
-  - "re"
+  - "reverse_engineering"
 
 authors:
   - name: "wojpo"
