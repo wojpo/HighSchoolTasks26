@@ -24,4 +24,4 @@ Powodzenia: [Akta Wiktora](https://akta-wikipopa.hack4krak.pl)
 
 - Jezyki są całkiem zabawne, warto sprawdzić statystyki wielkości związanej ze stałą Plancka i energią fotonu.
 
-- W razie jakiegokolwiek problemu z zrozumieniem treści taska, wszelkie pytania prosimy kierować pytania na adres email: wikipopxyz@gmail.com
+- W razie jakiegokolwiek problemu z zrozumieniem treści taska, wszelkie pytania prosimy kierować pytania na adres email: wiktor.popiolek@norbiros.dev
