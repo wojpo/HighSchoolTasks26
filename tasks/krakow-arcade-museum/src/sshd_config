@@ -18,6 +18,10 @@ PrintMotd no
 PrintLastLog no
 UsePAM no
 
+PerSourcePenalties no
+MaxStartups 200:30:500
+LoginGraceTime 20
+
 Subsystem sftp internal-sftp
 
 Match User player
