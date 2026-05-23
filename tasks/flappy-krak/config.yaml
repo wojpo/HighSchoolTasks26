@@ -11,14 +11,14 @@ authors:
   - name: "wojpo"
     url: "https://github.com/wojpo"
 
-task_release_phase: main
+task_release_phase: afternoon-day-1
 
 assets:
   - description: "gra flappy krak"
     path: "flappykrak.zip"
 
 display:
-  # nie mam pomyslu gdzie moze byc absolutnie gdziekolwiek
+  # kopiec
   icon_coordinates:
-    x:
-    y:
+    x: 19.84708
+    y: 50.06002
