@@ -1,0 +1,21 @@
+$schema: "../schema.json"
+
+id: "ankieta"
+name: "Ankieterzy na Mogilskim"
+difficulty_estimate: "rookie"
+flag_hash: "cb7b4af53eb4c6ac8c284afd5e79d1ad5f2f585d938fa8c878174fdc5e65549f"
+labels:
+  - "misc"
+
+authors:
+  - name: "Goteusz"
+    url: "https://github.com/goteusz-maszyk"
+
+
+task_release_phase: finale
+
+display:
+  # Rondo Mogilskie
+  icon_coordinates:
+    x: 19.959390
+    y: 50.066051
