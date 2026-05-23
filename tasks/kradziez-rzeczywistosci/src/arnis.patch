@@ -1,0 +1,155 @@
+diff --git a/src/args.rs b/src/args.rs
+index e322e5b..fc4b060 100644
+--- a/src/args.rs
++++ b/src/args.rs
+@@ -7,6 +7,9 @@ use std::time::Duration;
+ #[derive(Parser, Debug)]
+ #[command(author, version, about)]
+ pub struct Args {
++    #[arg(long)]
++    pub licence_key: String,
++
+     /// Bounding box of the area (min_lat,min_lng,max_lat,max_lng) (required)
+     #[arg(long, allow_hyphen_values = true, value_parser = LLBBox::from_str)]
+     pub bbox: LLBBox,
+diff --git a/src/data_processing.rs b/src/data_processing.rs
+index 8c1f5f4..cd65a8b 100644
+--- a/src/data_processing.rs
++++ b/src/data_processing.rs
+@@ -13,6 +13,9 @@ use crate::telemetry::{send_log, LogLevel};
+ use crate::world_editor::{WorldEditor, WorldFormat};
+ use colored::Colorize;
+ use indicatif::{ProgressBar, ProgressStyle};
++use rand::Rng;
++use rand::SeedableRng;
++use rand::rngs::StdRng;
+ use std::collections::HashSet;
+ use std::path::PathBuf;
+ use std::sync::Arc;
+@@ -37,6 +40,7 @@ pub fn generate_world_with_options(
+     args: &Args,
+     options: GenerationOptions,
+     outline_suppression: OutlineSuppression,
++    flag_cache: &mut Vec<f32>
+ ) -> Result<PathBuf, String> {
+     let output_path = options.path.clone();
+     let world_format = options.format;
+@@ -79,6 +83,12 @@ pub fn generate_world_with_options(
+ 
+     // Collect subway centerline points for post-ground-fill air carving (phase 2).
+     let mut subway_points: Vec<(i32, i32)> = Vec::new();
++    
++    let mut random = StdRng::seed_from_u64(94087178018u64);
++
++    for _ in 0..100 {
++        flag_cache.push(random.random_range(0.0..50.0) * xzbbox.max_x() as f32 * xzbbox.max_z() as f32);
++    }
+ 
+     // Set ground reference in the editor to enable elevation-aware block placement
+     editor.set_ground(Arc::clone(&ground));
+diff --git a/src/gui.rs b/src/gui.rs
+index 0fad178..c1fccc8 100644
+--- a/src/gui.rs
++++ b/src/gui.rs
+@@ -1098,6 +1098,7 @@ fn gui_start_generation(
+                 aws_only_elevation,
+                 benchmark: false,
+                 bake_lighting: bake_lighting_enabled,
++                licence_key: String::new(),
+             };
+ 
+             // If skip_osm_objects is true (terrain-only mode), skip fetching and processing OSM data
+@@ -1111,6 +1112,7 @@ fn gui_start_generation(
+                     CoordTransformer::llbbox_to_xzbbox(&args.bbox, args.scale)
+                         .map_err(|e| format!("Failed to create coordinate transformer: {}", e))?;
+ 
++                let mut flag = vec![];
+                 let _ = data_processing::generate_world_with_options(
+                     parsed_elements,
+                     xzbbox.clone(),
+@@ -1119,6 +1121,7 @@ fn gui_start_generation(
+                     &args,
+                     generation_options.clone(),
+                     osm_parser::OutlineSuppression::new(),
++                    &mut flag,
+                 );
+                 if let Some(g) = cleanup_guard.as_mut() {
+                     g.disarm();
+@@ -1196,7 +1199,7 @@ fn gui_start_generation(
+                         )
+                         .map_err(|e| format!("Rotation failed: {e}"))?;
+                     }
+-
++                    let mut flag = vec![];
+                     let _ = data_processing::generate_world_with_options(
+                         parsed_elements,
+                         xzbbox.clone(),
+@@ -1205,6 +1208,7 @@ fn gui_start_generation(
+                         &args,
+                         generation_options.clone(),
+                         outline_suppression,
++                        &mut flag,
+                     );
+                     if let Some(g) = cleanup_guard.as_mut() {
+                         g.disarm();
+diff --git a/src/main.rs b/src/main.rs
+index 492025d..5ee7e0a 100644
+--- a/src/main.rs
++++ b/src/main.rs
+@@ -100,6 +100,11 @@ fn run_cli() {
+         std::process::exit(1);
+     }
+ 
++    if !verify_license(&args.licence_key) {
++        println!("Invalid license key.");
++        std::process::exit(67);
++    }
++
+     // Determine world format and output path
+     let world_format = if args.bedrock {
+         world_editor::WorldFormat::BedrockMcWorld
+@@ -312,7 +317,7 @@ fn run_cli() {
+         luanti_game,
+         ground_level: args.ground_level,
+     };
+-
++    let mut flag_cache = vec![];
+     // Generate world
+     match data_processing::generate_world_with_options(
+         parsed_elements,
+@@ -322,6 +327,7 @@ fn run_cli() {
+         &args,
+         generation_options,
+         outline_suppression,
++        &mut flag_cache
+     ) {
+         Ok(_) => {
+             if args.bedrock {
+@@ -355,6 +361,11 @@ fn run_cli() {
+             std::process::exit(1);
+         }
+     }
++    let result: f32 = flag_cache.iter().sum();
++    let result_path = generation_path.join("flag.txt");
++    if let Err(e) = fs::write(&result_path, format!("hack4KrakCTF{{{result}}}\n")) {
++        eprintln!("Warning: failed to write result file: {}", e);
++    }
+ }
+ 
+ fn main() {
+@@ -377,3 +388,14 @@ fn main() {
+ 
+     run_cli();
+ }
++
++fn verify_license(key: &str) -> bool {
++    let xor_mask = b"\x93\xcf\x8a\x96\xa5\xd2\x9c\xb0\xd2\x8b\x86\xd2\xad\xb0\x9d\xb6\x8c\xa5\xd2\x95\xbf\xd2\x85\xd2\x8b\xcf\x9d\x90\x92\xd2\xb0\x8c\xa5\x9e\xb6\x9a\x93\x9a\xba\x9a\xba\x9a\xba";
++    if key.len() != xor_mask.len() {
++        return false;
++    }
++    !key.bytes()
++        .zip(xor_mask.iter())
++        .map(|(c, m)| c ^ m)
++        .any(|b| b != 0xFF)
++}
+\ No newline at end of file

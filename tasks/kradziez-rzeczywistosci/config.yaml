@@ -1,0 +1,24 @@
+$schema: "../schema.json"
+
+id: "kradziez-rzeczywistosci"
+name: "Kradzież Rzeczywistości"
+flag_hash: "34762d65bc2c84efe93fa9c14d249fe8549da7f39b4084a6915883d1f0292810"
+difficulty_estimate: "medium"
+labels:
+  - "reverse_engineering"
+
+authors:
+  - name: "Goteusz"
+    url: "https://github.com/goteusz-maszyk"
+
+task_release_phase: afternoon-day-1
+
+assets:
+  - description: "Arnis (*)"
+    path: "arnis-better"
+
+display:
+  # Lotnisko Czyżyny
+  icon_coordinates:
+    x: 19.990633
+    y: 50.084284
