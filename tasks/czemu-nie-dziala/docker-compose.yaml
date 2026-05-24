@@ -1,0 +1,15 @@
+services:
+  czemu-nie-dziala:
+    image: czemu-nie-dziala
+    build: .
+    networks:
+      - ctf-services-net
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.czemu-nie-dziala.rule=Host(`czemu-nie-dziala.hack4krak.pl`)"
+      - "traefik.http.services.czemu-nie-dziala.loadbalancer.server.port=6969"
+
+networks:
+  ctf-services-net:
+    external: true
+    name: bridge

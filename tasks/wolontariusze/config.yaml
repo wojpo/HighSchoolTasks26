@@ -1,4 +1,4 @@
-$schema: "../schema.json"
+fin$schema: "../schema.json"
 
 id: "wolontariusze"
 name: "Wolontariusze"

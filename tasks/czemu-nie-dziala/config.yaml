@@ -1,0 +1,20 @@
+$schema: "../schema.json"
+
+id: "czemu-nie-dziala"
+name: "Czemu to nie działa???"
+flag_hash: "c799be5eace92e7896ff8e1b50a8e051ad8560193cd841da4da3a86f2f9b9e21"
+difficulty_estimate: "easy"
+labels:
+  - "web"
+
+authors:
+  - name: "Goteusz"
+    url: "https://github.com/goteusz-maszyk"
+
+task_release_phase: finale
+
+display:
+  # nh
+  icon_coordinates:
+    x: 20.08884
+    y: 50.07885
