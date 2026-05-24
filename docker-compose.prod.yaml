@@ -10,7 +10,6 @@ services:
       - "--entrypoints.web.address=:80"
       - "--entrypoints.websecure.address=:443"
       - "--entrypoints.solr.address=:8983"
-      - "--entrypoints.minecraft-yet-another.address=:25567"
       - "--entrypoints.web.http.redirections.entryPoint.to=websecure"
       - "--entrypoints.web.http.redirections.entryPoint.scheme=https"
       - "--entrypoints.websecure.http.tls=true"
@@ -33,10 +32,6 @@ services:
         mode: ingress
       - target: 8983
         published: 8983
-        protocol: tcp
-        mode: ingress
-      - target: 25567
-        published: 25567
         protocol: tcp
         mode: ingress
     volumes:
