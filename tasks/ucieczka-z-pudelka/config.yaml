@@ -1,7 +1,7 @@
 $schema: "../schema.json"
 
 id: "ucieczka-z-pudelka"
-name: "Po co te aktualizacje?"
+name: "Ucieczka z pudełka"
 flag_hash: "38a849292f4d36533fec83b2baeb95c09c578e34255be4d4874d56b0b5300031"
 
 difficulty_estimate: medium
