@@ -1,13 +1,13 @@
 $schema: "../schema.json"
 
-id: "krakowskie_kasyno"
+id: "casino"
 name: "Krakowskie Kasyno"
 flag_hash: "aeeb2988a0d07e493de0f98566b127c10eedf4b2fe4a2848f1e1d1fababdac11"
 difficulty_estimate: "medium"
 labels:
   - "pwn"
 
-task_release_phase:
+task_release_phase: afternoon-day-2
 
 assets:
   - description: "Kod źródłowy aplikacji"
