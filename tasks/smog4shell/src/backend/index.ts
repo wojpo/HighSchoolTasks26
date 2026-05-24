@@ -329,13 +329,13 @@ async function run(session: string) {
 
         Labels: {
             "traefik.enable": "true",
-            "traefik.docker.network": TARGET_NETWORK,
+            // "traefik.docker.network": TARGET_NETWORK,
 
             [`traefik.http.routers.solr-${uuid}.rule`]:
                 `Host(\`${uuid}${SOLR_HOST_SUFFIX}\`)`,
 
-            [`traefik.http.routers.solr-${uuid}.entrypoints`]:
-                "websecure,solr",
+            // [`traefik.http.routers.solr-${uuid}.entrypoints`]:
+            //     "websecure,solr",
 
             [`traefik.http.services.solr-${uuid}.loadbalancer.server.port`]:
                 "8983",

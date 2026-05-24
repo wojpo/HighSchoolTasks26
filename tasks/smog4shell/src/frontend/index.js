@@ -20,7 +20,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   generateBtn.addEventListener("click", async () => {
     generateBtn.disabled = true;
-    btnText.textContent = "Generating...";
+    btnText.textContent = "Generowanie...";
     spinner.classList.remove("hidden");
     resultContainer.classList.add("hidden");
     errorContainer.classList.add("hidden");
@@ -37,7 +37,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.error || "Failed to generate instance.");
+        throw new Error(data.error || "Nie udało się wygenerować instancji.");
       }
 
       if (data.url) {
@@ -45,17 +45,17 @@ document.addEventListener("DOMContentLoaded", () => {
         resultUrl.href = urlStr;
         resultUrl.textContent = urlStr;
         const ttlMinutes = Math.max(1, Math.floor((data.ttlSeconds || 300) / 60));
-        resultTtl.textContent = `This instance will be available for ${ttlMinutes} minutes.`;
+        resultTtl.textContent = `Ta instancja będzie dostępna przez ${ttlMinutes} minut.`;
         resultContainer.classList.remove("hidden");
       } else {
-        throw new Error("Invalid response from server.");
+        throw new Error("Nieprawidłowa odpowiedź serwera.");
       }
     } catch (err) {
       errorContainer.textContent = err.message;
       errorContainer.classList.remove("hidden");
     } finally {
       generateBtn.disabled = false;
-      btnText.textContent = "Generate Instance";
+      btnText.textContent = "Generuj instancję";
       spinner.classList.add("hidden");
     }
   });
