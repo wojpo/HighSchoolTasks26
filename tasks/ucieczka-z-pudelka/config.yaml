@@ -1,0 +1,16 @@
+$schema: "../schema.json"
+
+id: "ucieczka-z-pudelka"
+name: "Po co te aktualizacje?"
+flag_hash: "38a849292f4d36533fec83b2baeb95c09c578e34255be4d4874d56b0b5300031"
+
+difficulty_estimate: medium
+labels:
+  - "pwn"
+  - "real_world"
+
+display:
+  #zakład karny kraków
+  icon_coordinates:
+    x: 19.940167760027595
+    y: 50.074003889018954

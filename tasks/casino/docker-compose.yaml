@@ -1,0 +1,16 @@
+services:
+  casino:
+    build: private/src
+    image: casino:latest
+    restart: unless-stopped
+    networks:
+      - ctf-services-net
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.casino.rule=Host(`casino.hack4krak.pl`)"
+      - "traefik.http.services.casino.loadbalancer.server.port=3000"
+
+networks:
+  ctf-services-net:
+    external: true
+    name: bridge

@@ -1,0 +1,10 @@
+{
+    "identifier": "casino",
+    "name": "Casino",
+    "category": ["misc", "crypto"],
+    "difficulty": "medium",
+    "flag": [
+        "hack4KrakCTF{n1e_0rg4n1z4t0rzy_n13_um13j4_t3g0_r0zw14z4c}"
+    ],
+    "version": 5
+}

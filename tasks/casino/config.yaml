@@ -1,0 +1,20 @@
+$schema: "../schema.json"
+
+id: "krakowskie_kasyno"
+name: "Krakowskie Kasyno"
+flag_hash: "aeeb2988a0d07e493de0f98566b127c10eedf4b2fe4a2848f1e1d1fababdac11"
+difficulty_estimate: "medium"
+labels:
+  - "pwn"
+
+task_release_phase:
+
+assets:
+  - description: "Kod źródłowy aplikacji"
+    path: "casino_docker.tar.gz"
+
+display:
+  #proposed location: jakieś kasyno w krakowie
+  icon_coordinates:
+    x: 19.946137349038924
+    y: 50.06526055183841

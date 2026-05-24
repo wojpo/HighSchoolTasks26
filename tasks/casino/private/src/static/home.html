@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Graj</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .menu {
+            background-color: #007bff;
+            padding: 10px;
+            color: #fff;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .menu a {
+            color: #fff;
+            text-decoration: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+        }
+        .menu a:hover {
+            background-color: #0056b3;
+        }
+        .main-content {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+            text-align: center;
+        }
+        .user-info {
+            margin-bottom: 20px;
+        }
+        .input-container {
+            width: 100%;
+        }
+        .input-container label {
+            display: block;
+            margin: 5px;
+        }
+        .input-container input,
+        select {
+            width: 65%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+            margin: 10px;
+        }
+        .button-container {
+            margin: 10px;
+        }
+        .button-container button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .button-container button:hover {
+            background-color: #0056b3;
+        }
+        .small-button {
+            padding: 5px 10px;
+            font-size: 14px;
+        }
+        .button {
+            padding: 5px 10px;
+            font-size: 22px;
+        }
+        .seed-info {
+            margin-top: 20px;
+            font-family: monospace;
+            text-align: center;
+        }
+        .seed-info p {
+            margin-bottom: 5px;
+        }
+        .seed-info span {
+            font-weight: bold;
+        }
+        .result {
+            margin-top: 20px;
+            font-size: 18px;
+        }
+    </style>
+    <script src="/js/main.js"></script>
+    <script src="/js/dice.js"></script>
+</head>
+<body>
+<div class="container">
+    <div class="menu">
+        <div>
+            <span id="username"></span>
+            <span id="balance"></span>
+        </div>
+        <div>
+            <a href="home.html">Graj</a>
+            <a href="flag">Flaga</a>
+            <a href="signout">Wyloguj</a>
+        </div>
+    </div>
+    <div class="main-content">
+        <h1>Kości</h1>
+        <div style="display: flex; width: 100%;">
+            <div class="input-container">
+                <label for="guess">Wybierz swój typ:</label>
+                <select id="guess">
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                </select>
+            </div>
+            <div class="input-container">
+                <label for="bet">Wprowadź stawkę:</label>
+                <input type="number" id="bet" placeholder="Wprowadź kwotę">
+            </div>
+        </div>
+        <div class="button-container">
+            <button id="play" class="button">Graj</button>
+        </div>
+        <h2 id="result">
+            Wynik rzutu: -
+        </h2>
+        <textarea style="resize: none; width: 80%;" rows="5" disabled>Wybierz swój typ rzutu kością, wprowadź stawkę i kliknij Graj!
+Jeśli zgadniesz wynik poprawnie, wygrasz 3-krotność swojej stawki.
+Nasze Kasyno jest w 100% uczciwe.
+Współczynnik zwrotu dla gracza (RTP) wynosi 50%.
+Powodzenia!</textarea>
+        <div style="display: flex; width: 100%;">
+            <div class="input-container">
+                <input type="text" id="clientSeed" style="font-family:monospace" disabled>
+                <button id="randomizeSeed" class="small-button">Zmień Seed Klienta</button>
+            </div>
+        </div>
+    </div>
+    <div class="seed-info">
+        <p><span>sha256(Server Seed):</span> <span id="serverSeedHash"></span></p>
+        <p><span>Nonce:</span> <span id="nonce"></span></p>
+    </div>
+</div>
+</body>
+</html>

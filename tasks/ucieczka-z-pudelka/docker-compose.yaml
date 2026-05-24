@@ -1,0 +1,31 @@
+services:
+  ucieczka-z-pudelka:
+    image: vulhub/elasticsearch:1.4.2
+    restart: unless-stopped
+    networks:
+      - ctf-services-net
+    ports:
+      - "9200:9200"
+    environment:
+      discovery.type: single-node
+
+
+    volumes:
+      - ./data/:/host-data:ro
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.ucieczka-z-pudelka.rule=Host(`ucieczka-z-pudelka.hack4krak.pl`)"
+      - "traefik.http.services.ucieczka-z-pudelka.loadbalancer.server.port=9200"
+    entrypoint:
+      - /bin/sh
+      - -c
+      - |
+        mkdir -p /usr/share/elasticsearch/data && \
+        cp -r /host-data/* /usr/share/elasticsearch/data/ && \
+        echo 'hack4KrakCTF{k00cH4m-akTuLi7ac1e-1-h4ck4kr4k}' > /flag.txt && \
+        exec /usr/share/elasticsearch/bin/elasticsearch
+
+networks:
+  ctf-services-net:
+    external: true
+    name: bridge
