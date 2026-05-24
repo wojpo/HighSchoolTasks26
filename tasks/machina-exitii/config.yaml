@@ -1,0 +1,24 @@
+$schema: "../schema.json"
+
+id: "machina-exitii"
+name: "Machina Exitii"
+flag_hash: "8fb3eeaf53f90cbca77d63f5f05de039791348707b0fbbd5793e04c8836ba3cd"
+
+difficulty_estimate: "hard"
+labels:
+  - "misc"
+  - "pwn"
+  - "crypto"
+  - "web"
+
+task_release_phase: morning-day-2
+
+assets:
+  - description: "Kod aplikacji"
+    path: "machina-exitii.tar.gz"
+
+display:
+  icon_coordinates:
+    # Prokocim
+    x: 20.02058106934346
+    y: 50.013130433707225
