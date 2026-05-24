@@ -1,0 +1,15 @@
+$schema: "../schema.json"
+
+id: "quick-heist"
+name: "Quick Heist"
+flag_hash: "7ac3c938b3042503e5a73def31198aaec0be2a77c8515f1b524f890d6b033839"
+difficulty_estimate: "hard"
+labels:
+  - "games"
+
+task_release_phase: morning-day-2
+
+display:
+  icon_coordinates:
+    x: 19.91500
+    y: 50.02100

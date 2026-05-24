@@ -1,0 +1,71 @@
+services:
+  quick-heist:
+    image: itzg/minecraft-server:stable-java21
+    stdin_open: true
+    ports:
+      - target: 25565
+        published: 25568
+        protocol: tcp
+        mode: host
+    networks:
+      - ctf-services-net
+    security_opt:
+      - no-new-privileges:true
+    deploy:
+      restart_policy:
+        condition: on-failure
+      resources:
+        limits:
+          cpus: "2"
+          memory: 4G
+    environment:
+      EULA: "TRUE"
+      TYPE: "PAPER"
+      VERSION: "1.21.6"
+      MEMORY: "3G"
+      ENABLE_COMMAND_BLOCK: "true"
+      FUNCTION_PERMISSION_LEVEL: "4"
+      OP_PERMISSION_LEVEL: "4"
+      COPY_CONFIG_DEST: "/data"
+      SYNC_SKIP_NEWER_IN_DESTINATION: "false"
+      ONLINE_MODE: "false"
+      ENFORCE_SECURE_PROFILE: "false"
+      DIFFICULTY: "normal"
+      GAMEMODE: "adventure"
+      FORCE_GAMEMODE: "true"
+      MOTD: "quick heist"
+      VIEW_DISTANCE: "8"
+      SIMULATION_DISTANCE: "6"
+      SPAWN_PROTECTION: "0"
+      LEVEL_TYPE: "flat"
+      RCON_CMDS_STARTUP: |-
+        gamerule doMobSpawning false
+        gamerule commandBlockOutput false
+
+        scoreboard objectives add quickHeist dummy
+
+        setworldspawn 0 64 25 180
+
+        fill -26 63 -26 26 75 -14 minecraft:bedrock
+        fill -25 64 -25 25 74 -15 minecraft:air
+
+        setblock 0 65 -13 minecraft:oak_button[face=wall,facing=south] replace
+        setblock 0 65 -14 minecraft:command_block{Command:"scoreboard players set @p[scores={quickHeist=0},x=-26,y=63,z=-13,dx=52,dy=12,dz=50] quickHeist 1"} replace
+
+        setblock 0 65 -25 minecraft:oak_button[face=wall,facing=south] replace
+        setblock 0 65 -26 minecraft:command_block{Command:"scoreboard players set @p[scores={quickHeist=1},x=-25,y=64,z=-25,dx=50,dy=10,dz=10] quickHeist 2"} replace
+
+        setblock 0 62 0 minecraft:repeating_command_block[facing=east,conditional=false]{Command:"tell @a[scores={quickHeist=2},x=-26,y=63,z=-13,dx=52,dy=12,dz=50] hack4KrakCTF{szybki_napad_na_bedrockowy_skarbiec}",auto:1b} replace
+        setblock 1 62 0 minecraft:chain_command_block[facing=east,conditional=false]{Command:"scoreboard players set @a[scores={quickHeist=2},x=-26,y=63,z=-13,dx=52,dy=12,dz=50] quickHeist 3",auto:1b} replace
+    configs:
+      - source: bukkit
+        target: /config/bukkit.yml
+
+configs:
+  bukkit:
+    file: ./bukkit.yml
+
+networks:
+  ctf-services-net:
+    external: true
+    name: bridge

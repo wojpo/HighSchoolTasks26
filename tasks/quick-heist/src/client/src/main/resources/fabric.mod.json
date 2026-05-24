@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "id": "quickheist",
+  "version": "${version}",
+  "name": "Quick Heist Client",
+  "description": "Fabric client with the teleport exploit for Quick Heist.",
+  "authors": [
+    "Norbiros"
+  ],
+  "environment": "client",
+  "entrypoints": {
+    "client": [
+      "dev.norbiros.quickheist.QuickHeistClient"
+    ]
+  },
+  "depends": {
+    "java": ">=21",
+    "minecraft": "${mc_version}",
+    "fabricloader": ">=0.19.2"
+  }
+}
