@@ -6,7 +6,7 @@ services:
       - target: 25565
         published: 25568
         protocol: tcp
-        mode: host
+        mode: ingress
     networks:
       - ctf-services-net
     security_opt:
