@@ -6,7 +6,7 @@ services:
       - target: 25565
         published: 25565
         protocol: tcp
-        mode: ingress
+        mode: host
     security_opt:
       - no-new-privileges:true
     deploy:
