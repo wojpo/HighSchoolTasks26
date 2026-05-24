@@ -53,6 +53,8 @@ const IMAGE_CONTEXT_DIR = path.resolve(process.cwd(), "flag-server");
 const TARGET_NETWORK = process.env.SOLR_NETWORK ?? "bridge";
 const TIMEOUT_MS = Number(process.env.INSTANCE_TIMEOUT_MS ?? String(5 * 60 * 1000));
 const MAX_ACTIVE_CONTAINERS = Number(process.env.MAX_ACTIVE_CONTAINERS ?? "10");
+const SOLR_MEMORY_BYTES = 768 * 1024 * 1024;
+const SOLR_MEMORY_RESERVATION_BYTES = 384 * 1024 * 1024;
 const TTL_SECONDS = Math.floor(TIMEOUT_MS / 1000);
 let createQueue: Promise<void> = Promise.resolve();
 
@@ -299,7 +301,14 @@ async function run(session: string) {
     const container = await docker.createContainer({
         Image: IMAGE_NAME,
         name: `${uuid}${CONTAINER_SUFFIX}`,
-        Env: ["SOLR_JAVA_MEM=-Xms128m -Xmx384m"],
+        Env: [
+            "SOLR_JAVA_MEM=-Xms96m -Xmx256m",
+            `SOLR_OPTS=${[
+                "-Xss256k",
+                "-Dsolr.jetty.threads.min=2",
+                "-Dsolr.jetty.threads.max=32",
+            ].join(" ")}`,
+        ],
 
         ExposedPorts: {
             "8983/tcp": {},
@@ -310,16 +319,16 @@ async function run(session: string) {
 
             NanoCpus: 0.5e9,          // 0.5 vCPU (wartość w nanosekundach CPU/s)
 
-            // RAM
-            Memory: 512 * 1024 * 1024,
-            MemorySwap: 512 * 1024 * 1024,
-            MemoryReservation: 256 * 1024 * 1024,
+            // Keep native memory available for JVM threads; heap alone is not enough for Solr.
+            Memory: SOLR_MEMORY_BYTES,
+            MemorySwap: SOLR_MEMORY_BYTES,
+            MemoryReservation: SOLR_MEMORY_RESERVATION_BYTES,
 
             // /dev/shm for JVM shared memory
             ShmSize: 256 * 1024 * 1024,
 
             // Procesy
-            PidsLimit: 100,
+            PidsLimit: 256,
 
             // File descriptor limits for Solr
             Ulimits: [

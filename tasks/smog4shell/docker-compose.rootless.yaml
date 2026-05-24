@@ -5,6 +5,7 @@ services:
     environment:
       SQLITE_DB_PATH: /app/data/smog4shell.sqlite
       SOLR_NETWORK: ctf-services-net
+      MAX_ACTIVE_CONTAINERS: 10
     volumes:
       - /run/user/1000/docker.sock:/var/run/docker.sock
       - sqlite-data:/app/data
